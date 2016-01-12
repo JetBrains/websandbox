@@ -1,8 +1,19 @@
-var sandbox = require('../lib/sandbox');
+var sandbox = require('../lib/sandbox-api');
 
 
 describe('Sandbox', function () {
+    beforeEach(() => {
+        let frames = document.querySelectorAll('iframe');
+        Array.prototype.forEach.call(frames, (frame) => frame.remove());
+    });
+
     it('Sandbox init', function () {
-        sandbox.create('http://foo.bar/js.js');
+        var sand = sandbox.create('http://foo.bar/js.js');
+        sand.should.be.defined;
+    });
+
+    it('Sandbox create iframe', function () {
+        var sand = sandbox.create('http://foo.bar/js.js');
+        document.querySelector('iframe').should.be.defined;
     });
 });

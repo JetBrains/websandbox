@@ -1,30 +1,36 @@
-// Karma configuration
-// Generated on Tue Jan 12 2016 16:38:58 GMT+0300 (MSK)
+function getWebpackConfig() {
+    var config = require('./webpack.config');
+    //Drop entries because it breaks karma-webpack
+    config.entry = {};
+    return config;
+}
 
-module.exports = function(config) {
-  config.set({
-    frameworks: ['mocha', 'chai'],
+module.exports = function (config) {
+    config.set({
+        frameworks: ['mocha', 'chai'],
 
-    files: ['test/**/*.js'],
+        files: ['test/**/*.js'],
 
-    preprocessors: {'test/**/*.js': ['webpack']},
+        preprocessors: {'test/**/*.js': ['webpack']},
 
-    webpackServer: {quiet: true},
+        webpackServer: {quiet: true},
 
-    reporters: ['progress'],
+        webpack: getWebpackConfig(),
 
-    port: 9876,
+        reporters: ['progress'],
 
-    colors: true,
+        port: 9876,
 
-    logLevel: config.LOG_INFO,
+        colors: true,
 
-    autoWatch: true,
+        logLevel: config.LOG_INFO,
 
-    browsers: ['Chrome'],
+        autoWatch: true,
 
-    singleRun: true,
+        browsers: ['Chrome'],
 
-    concurrency: Infinity
-  })
+        singleRun: true,
+
+        concurrency: Infinity
+    })
 }
