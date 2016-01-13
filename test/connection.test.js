@@ -22,7 +22,7 @@ describe('Connection', function () {
         let conn = new Connection(this.localApi, this.postMessage, this.registerOnMessageListener);
         let fakeTestMethod = sinon.stub();
         conn.setInterface({testMethod: fakeTestMethod});
-debugger;
+
         conn.remote.testMethod('test', 123)
             .then(res => {
                 //fakeTestMethod.should.have.been.called;
