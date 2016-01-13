@@ -1,12 +1,17 @@
+/* eslint-env node */
 var path = require('path');
 var HtmlWebpackPlugin = require('html-webpack-plugin')
 
 module.exports = {
     entry: {
-        simple: './examples/simple/simple'
+        simple: './examples/simple/simple',
+        frame: './lib/frame'
     },
     output: {
-        path: __dirname + '/dist'
+        path: __dirname + '/dist',
+        filename: '[name].js',
+        libraryTarget: 'var',
+        library: 'Sandboxjs'
     },
     module: {
         loaders: [
