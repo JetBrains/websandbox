@@ -2,9 +2,10 @@ import Connection from '../lib/connection';
 
 describe('Connection', function () {
 
-    beforeEach(function() {
+    beforeEach(function () {
         this.localApi = sinon.stub({
-            testMethod: () => {}
+            testLocalMethod: () => {
+            }
         });
 
         this.registerOnMessageListener = (listener) => {
@@ -28,11 +29,50 @@ describe('Connection', function () {
                 done();
             });
 
+
+        //Emulate response
         this.callMessageListener({
             callId: this.postMessage.getCall(0).args[0].callId,
             type: 'response',
             success: true,
-            data: {foo: 'bar'}
+            result: {foo: 'bar'}
         })
+    });
+
+    it('should call local API on remote call', function () {
+        new Connection(this.localApi, this.postMessage, this.registerOnMessageListener);
+
+        this.callMessageListener({
+            callId: 'fake-call-id',
+            type: 'message',
+            methodName: 'testLocalMethod',
+            arguments: [{foo: 'bar'}, 123]
+        });
+
+        this.localApi.testLocalMethod.should.have.been.calledWith({foo: 'bar'}, 123);
+    });
+
+    it('should response to remote call', function (done) {
+        new Connection(this.localApi, this.postMessage, this.registerOnMessageListener);
+
+        this.localApi.testLocalMethod.returns({fake: 'response'});
+
+        this.callMessageListener({
+            callId: 'fake-call-id',
+            type: 'message',
+            methodName: 'testLocalMethod',
+            arguments: []
+        });
+
+        setTimeout(() => {
+            this.postMessage.should.have.been.calledWith({
+                callId: "fake-call-id",
+                result: {fake: 'response'},
+                success: true,
+                type: "response"
+            }, '*');
+            done();
+        }, 10);
+
     });
 });
