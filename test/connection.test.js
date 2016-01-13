@@ -18,14 +18,13 @@ describe('Connection', function () {
         conn.should.be.defined;
     });
 
-    it.only('should call remote and wait for response', function (done) {
+    it('should call remote and wait for response', function (done) {
         let conn = new Connection(this.localApi, this.postMessage, this.registerOnMessageListener);
-        let fakeTestMethod = sinon.stub();
-        conn.setInterface({testMethod: fakeTestMethod});
+        conn.setInterface({testMethod: null});
 
         conn.remote.testMethod('test', 123)
             .then(res => {
-                //fakeTestMethod.should.have.been.called;
+                res.should.eql({foo: 'bar'});
                 done();
             });
 
