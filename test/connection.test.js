@@ -7,12 +7,33 @@ describe('Connection', function () {
             testMethod: () => {}
         });
 
-        this.postMessage = sinon.spy();
-        this.registerOnMessageListener = sinon.spy();
-    })
+        this.registerOnMessageListener = (listener) => {
+            this.callMessageListener = listener;
+        };
+        this.postMessage = sinon.stub();
+    });
 
-    it('Connection init', function () {
-        var conn = new Connection(this.localApi, this.postMessage, this.registerOnMessageListener);
+    it('should init onnection', function () {
+        let conn = new Connection(this.localApi, this.postMessage, this.registerOnMessageListener);
         conn.should.be.defined;
+    });
+
+    it.only('should call remote and wait for response', function (done) {
+        let conn = new Connection(this.localApi, this.postMessage, this.registerOnMessageListener);
+        let fakeTestMethod = sinon.stub();
+        conn.setInterface({testMethod: fakeTestMethod});
+debugger;
+        conn.remote.testMethod('test', 123)
+            .then(res => {
+                //fakeTestMethod.should.have.been.called;
+                done();
+            });
+
+        this.callMessageListener({
+            callId: this.postMessage.getCall(0).args[0].callId,
+            type: 'response',
+            success: true,
+            data: {foo: 'bar'}
+        })
     });
 });
