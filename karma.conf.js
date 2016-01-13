@@ -2,16 +2,17 @@ function getWebpackConfig() {
     var config = require('./webpack.config');
     //Drop entries because it breaks karma-webpack
     config.entry = {};
+    config.devtool = 'eval';
     return config;
 }
 
 module.exports = function (config) {
     config.set({
-        frameworks: ['mocha', 'chai'],
+        frameworks: ['mocha', 'sinon', 'sinon-chai'],
 
         files: ['test/**/*.js'],
 
-        preprocessors: {'test/**/*.js': ['webpack']},
+        preprocessors: {'test/**/*.js': ['webpack', 'sourcemap']},
 
         webpackServer: {quiet: true},
 
@@ -27,8 +28,17 @@ module.exports = function (config) {
 
         autoWatch: true,
 
-        browsers: ['Chrome'],
+        browsers: ['Electron'],
 
+        electronOpts: {
+            show: false,
+            skipTaskbar: true,
+            height: 1024,
+            width: 768,
+            webPreferences: {
+                pageVisibility: true
+            }
+        },
         singleRun: true,
 
         concurrency: Infinity
