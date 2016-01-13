@@ -7,12 +7,12 @@ describe('Sandbox', function () {
     });
 
     it('Sandbox init', function () {
-        var sand = sandbox.create('http://foo.bar/js.js');
+        var sand = sandbox.create({}, 'http://foo.bar/js.js');
         sand.should.be.defined;
     });
 
     it('Sandbox create iframe', function () {
-        sandbox.create('http://foo.bar/js.js');
+        sandbox.create({}, 'http://foo.bar/js.js');
         document.querySelector('iframe').should.be.defined;
     });
 });
