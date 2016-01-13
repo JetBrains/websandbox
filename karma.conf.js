@@ -28,7 +28,14 @@ module.exports = function (config) {
 
         autoWatch: true,
 
-        browsers: ['Electron'],
+        customLaunchers: {
+            Chrome_travis_ci: {
+                base: 'Chrome',
+                flags: ['--no-sandbox']
+            }
+        },
+
+        browsers: process.env.TRAVIS ? ['Chrome_travis_ci'] : ['Electron'],
 
         electronOpts: {
             show: false,
