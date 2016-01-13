@@ -4,9 +4,10 @@
   "description": "A sandbox library for runnung javascript inside HTML5 sandboxed iframe",
   "main": "dist/sandbox.js",
   "scripts": {
-    "build": "rm -rf dist && webpack",
+    "build": "rm -rf dist && webpack --devtool sourcemap",
     "lint": "eslint lib test",
-    "test": "karma start"
+    "test": "karma start",
+    "start": "webpack-dev-server --config examples/webpack-examples.config.js --devtool inline-source-map --port 9544 --colors --progress"
   },
   "keywords": [
     "sandbox",
@@ -29,6 +30,8 @@
     "es6-promise-polyfill": "1.2.0",
     "eslint": "1.10.3",
     "eslint-config-defaults": "8.0.2",
+    "file-loader": "0.8.5",
+    "html-webpack-plugin": "1.7.0",
     "karma": "0.13.19",
     "karma-chai": "0.1.0",
     "karma-chrome-launcher": "0.2.2",
@@ -40,6 +43,7 @@
     "karma-webpack": "1.7.0",
     "mocha": "2.3.4",
     "sinon": "1.17.2",
-    "webpack": "1.12.11"
+    "webpack": "1.12.11",
+    "webpack-dev-server": "1.14.1"
   }
 }

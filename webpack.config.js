@@ -7,6 +7,8 @@ module.exports = {
     },
     output: {
         path: __dirname + '/dist',
+        libraryTarget: 'umd',
+        library: 'Sandboxjs',
         filename: '[name].js'
     },
     module: {
