@@ -2,7 +2,7 @@ var sandbox = require('../lib/sandbox-api');
 
 
 describe('Sandbox', function () {
-    beforeEach(() => {
+    afterEach(() => {
         let frames = document.querySelectorAll('iframe');
         Array.prototype.forEach.call(frames, (frame) => frame.remove());
     });
@@ -13,7 +13,7 @@ describe('Sandbox', function () {
     });
 
     it('Sandbox create iframe', function () {
-        var sand = sandbox.create('http://foo.bar/js.js');
+        sandbox.create('http://foo.bar/js.js');
         document.querySelector('iframe').should.be.defined;
     });
 });
