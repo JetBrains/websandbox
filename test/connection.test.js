@@ -2,8 +2,6 @@ import Connection from '../lib/connection';
 
 describe('Connection', function () {
 
-    let localApi = {};
-
     beforeEach(function() {
         this.localApi = sinon.stub({
             testMethod: () => {}

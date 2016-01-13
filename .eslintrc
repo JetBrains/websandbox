@@ -1,9 +1,17 @@
 {
   "parser": "babel-eslint",
+  "extends": [
+    "defaults"
+  ],
+  "rules": {
+    "no-unused-vars": [2, {"vars": "local", "args": "none"}]
+  },
   "env": {
     "browser": true,
+    "es6": true,
     "mocha": true
   },
   "globals": {
+    "sinon": true
   }
 }

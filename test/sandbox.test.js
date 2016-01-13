@@ -1,5 +1,4 @@
-var sandbox = require('../lib/sandbox-api');
-
+import sandbox from '../lib/sandbox-api';
 
 describe('Sandbox', function () {
     afterEach(() => {
