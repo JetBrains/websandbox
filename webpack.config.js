@@ -2,12 +2,15 @@
 var path = require('path');
 
 module.exports = {
-    entry: './lib/sandbox-api',
+    entry: {
+        frame: './lib/frame',
+        sandboxjs: './lib/sandbox-api'
+    },
     output: {
-        path: path.resolve('./', 'dist'),
+        path: __dirname + '/dist',
         libraryTarget: 'umd',
         library: 'Sandboxjs',
-        filename: 'Sandbox.js'
+        filename: '[name].js'
     },
     module: {
         loaders: [
