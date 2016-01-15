@@ -7,17 +7,17 @@ describe('Sandbox', function () {
     });
 
     it('Sandbox init', function () {
-        var sand = sandbox.create({}, 'http://foo.bar/js.js');
+        var sand = sandbox.create({});
         sand.should.be.defined;
     });
 
     it('Sandbox create iframe', function () {
-        sandbox.create({}, 'http://foo.bar/js.js');
+        sandbox.create({});
         document.querySelector('iframe').should.be.defined;
     });
 
     it('Sandbox create iframe with correct src', function () {
-        sandbox.create({}, 'http://foo.bar/js.js', {frameHtmlFileName: 'fooooo.html'});
-        document.querySelector('iframe').src.should.contain('fooooo.html');
+        sandbox.create({}, {frameHtmlFileName: 'fooooo.html'});
+        document.querySelector('iframe').srcdoc.should.contain('frame.js');
     });
 });

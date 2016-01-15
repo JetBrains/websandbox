@@ -6,6 +6,10 @@ var localApi = {
     }
 }
 
-var sandbox = Sandbox.create(localApi, '');
+const sandbox = Sandbox.create(localApi, '');
+sandbox.promise
+    .then(() => {
+        console.log('sandbox is created!', sandbox);
+        sandbox.runCode('console.log("hello from iframe");');
+    });
 
-sandbox.runCode('console.log("hello from iframe");');
