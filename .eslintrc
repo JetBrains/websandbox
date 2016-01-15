@@ -4,7 +4,8 @@
     "defaults"
   ],
   "rules": {
-    "no-unused-vars": [2, {"vars": "local", "args": "none"}]
+    "no-unused-vars": [2, {"vars": "local", "args": "none"}],
+    semi: [2, "always"]
   },
   "env": {
     "browser": true,
