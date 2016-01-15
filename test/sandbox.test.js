@@ -16,8 +16,8 @@ describe('Sandbox', function () {
         document.querySelector('iframe').should.be.defined;
     });
 
-    it('Sandbox create iframe with javascript in src', function () {
-        sandbox.create({}, 'http://foo.bar/js.js');
-        document.querySelector('iframe').src.should.contain('javascript:');
+    it('Sandbox create iframe with correct src', function () {
+        sandbox.create({}, 'http://foo.bar/js.js', {frameHtmlFileName: 'fooooo.html'});
+        document.querySelector('iframe').src.should.contain('fooooo.html');
     });
 });
