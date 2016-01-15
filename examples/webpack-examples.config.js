@@ -22,7 +22,6 @@ module.exports = {
         ]
     },
     plugins: [new HtmlWebpackPlugin({
-        template: 'examples/simple/simple.html',
-        inject: 'body'
+        template: 'examples/simple/simple.html'
     })]
 };
