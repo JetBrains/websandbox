@@ -5,7 +5,7 @@ It is usable to host user provided widgets and similar cases.
 
 Usage example (see examples folder to more information): 
 ```js
-import Sandbox from '../../lib/sandbox-api';
+import Sandbox from '../../lib/websandbox-api';
 
 var localApi = {
     testApiFn: function (message) {
@@ -21,9 +21,9 @@ sandbox.promise
         sandbox.runCode(`
             console.info("Sandboxed code initialized successfully");
             document.body.innerHTML = "Content is generated from the sandbox";
-            Sandboxjs.connection.remote.testApiFn("some argument");
+            Websandbox.connection.remote.testApiFn("some argument");
 
-            Sandboxjs.connection.setLocalApi({
+            Websandbox.connection.setLocalApi({
                 sandboxedMethod: function(message) {
                     console.info('sandboxedMethod called successfully:', message);
                     return 'this is sandboxedMethod result';
@@ -37,5 +37,6 @@ sandbox.promise
                     .then(res => console.log('Call was successful:', res));
             });
     });
+
 
 ```
