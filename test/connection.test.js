@@ -94,6 +94,6 @@ describe('Connection', function () {
                     }, '*');
                     done();
                 }, 10);
-            })
+            });
     });
 });
