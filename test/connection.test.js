@@ -16,12 +16,12 @@ describe('Connection', function () {
     });
 
     it('should init onnection', function () {
-        let conn = new Connection(ID, this.localApi, this.postMessage, this.registerOnMessageListener);
+        let conn = new Connection(ID, this.postMessage, this.registerOnMessageListener);
         conn.should.be.defined;
     });
 
     it('should call remote and wait for response', function (done) {
-        let conn = new Connection(ID, this.localApi, this.postMessage, this.registerOnMessageListener);
+        let conn = new Connection(ID, this.postMessage, this.registerOnMessageListener);
         conn.setInterface({testMethod: null});
 
         conn.remote.testMethod('test', 123)
@@ -42,44 +42,58 @@ describe('Connection', function () {
         });
     });
 
-    it('should call local API on remote call', function () {
-        new Connection(ID, this.localApi, this.postMessage, this.registerOnMessageListener);
+    it('should call local API on remote call', function (done) {
+        //First notify connection that localApi was registered on other side
+        const conn = new Connection(ID, this.postMessage, this.registerOnMessageListener);
+        sinon.stub(conn, 'registerCallback', (resolve) => resolve());
 
-        this.callMessageListener({
-            data: {
-                callId: 'fake-call-id',
-                type: 'message',
-                methodName: 'testLocalMethod',
-                arguments: [{foo: 'bar'}, 123]
-            }
-        });
+        conn.setLocalApi(this.localApi)
+            .then(() => {
 
-        this.localApi.testLocalMethod.should.have.been.calledWith({foo: 'bar'}, 123);
+                this.callMessageListener({
+                    data: {
+                        callId: 'fake-call-id',
+                        type: 'message',
+                        methodName: 'testLocalMethod',
+                        arguments: [{foo: 'bar'}, 123]
+                    }
+                });
+            })
+            .then(() => {
+                conn.localApi.testLocalMethod.should.have.been.calledWith({foo: 'bar'}, 123);
+                done();
+            });
+
+
     });
 
     it('should response to remote call', function (done) {
-        new Connection(ID, this.localApi, this.postMessage, this.registerOnMessageListener);
+        const conn = new Connection(ID, this.postMessage, this.registerOnMessageListener);
+        sinon.stub(conn, 'registerCallback', (resolve) => resolve());
 
         this.localApi.testLocalMethod.returns({fake: 'response'});
 
-        this.callMessageListener({
-            data: {
-                callId: 'fake-call-id',
-                type: 'message',
-                methodName: 'testLocalMethod',
-                arguments: []
-            }
-        });
-
-        setTimeout(() => {
-            this.postMessage.should.have.been.calledWith({
-                callId: "fake-call-id",
-                result: {fake: 'response'},
-                success: true,
-                type: "response"
-            }, '*');
-            done();
-        }, 10);
-
+        conn.setLocalApi(this.localApi)
+            .then(() => {
+                this.callMessageListener({
+                    data: {
+                        callId: 'fake-call-id',
+                        type: 'message',
+                        methodName: 'testLocalMethod',
+                        arguments: []
+                    }
+                });
+            })
+            .then(() => {
+                setTimeout(() => {
+                    this.postMessage.should.have.been.calledWith({
+                        callId: "fake-call-id",
+                        result: {fake: 'response'},
+                        success: true,
+                        type: "response"
+                    }, '*');
+                    done();
+                }, 10);
+            })
     });
 });
