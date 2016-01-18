@@ -39,7 +39,7 @@ describe('Connection', function () {
 
     it('should call remote and wait for response', function (done) {
         let conn = new Connection(ID, this.postMessage, this.registerOnMessageListener);
-        conn.setInterface({testMethod: null});
+        conn.setInterface(['testMethod']);
 
         conn.remote.testMethod('test', 123)
             .then(res => {
