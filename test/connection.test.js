@@ -1,6 +1,7 @@
 import Connection from '../lib/connection';
 
 describe('Connection', function () {
+    const ID = 'foo-bar';
 
     beforeEach(function () {
         this.localApi = sinon.stub({
@@ -15,12 +16,12 @@ describe('Connection', function () {
     });
 
     it('should init onnection', function () {
-        let conn = new Connection(this.localApi, this.postMessage, this.registerOnMessageListener);
+        let conn = new Connection(ID, this.localApi, this.postMessage, this.registerOnMessageListener);
         conn.should.be.defined;
     });
 
     it('should call remote and wait for response', function (done) {
-        let conn = new Connection(this.localApi, this.postMessage, this.registerOnMessageListener);
+        let conn = new Connection(ID, this.localApi, this.postMessage, this.registerOnMessageListener);
         conn.setInterface({testMethod: null});
 
         conn.remote.testMethod('test', 123)
@@ -42,7 +43,7 @@ describe('Connection', function () {
     });
 
     it('should call local API on remote call', function () {
-        new Connection(this.localApi, this.postMessage, this.registerOnMessageListener);
+        new Connection(ID, this.localApi, this.postMessage, this.registerOnMessageListener);
 
         this.callMessageListener({
             data: {
@@ -57,7 +58,7 @@ describe('Connection', function () {
     });
 
     it('should response to remote call', function (done) {
-        new Connection(this.localApi, this.postMessage, this.registerOnMessageListener);
+        new Connection(ID, this.localApi, this.postMessage, this.registerOnMessageListener);
 
         this.localApi.testLocalMethod.returns({fake: 'response'});
 
