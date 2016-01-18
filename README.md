@@ -18,7 +18,7 @@ sandbox.promise
     .then(() => {
         console.log('Sandbox is created. Trying to run code inside');
 
-        sandbox.runCode(\`
+        sandbox.runCode(`
             console.info("Sandboxed code initialized successfully");
             document.body.innerHTML = "Content is generated from the sandbox";
             Sandboxjs.connection.remote.testApiFn("some argument");
@@ -29,7 +29,7 @@ sandbox.promise
                     return 'this is sandboxedMethod result';
                 }
             });
-        \`)
+        `)
             .then(() => console.log('Code has been ran'))
             .then(() => {
                 console.log('Calling sandboxedMethod...');
