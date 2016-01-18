@@ -4,9 +4,9 @@ var localApi = {
     test: function () {
         alert('test function called');
     }
-}
+};
 
-const sandbox = Sandbox.create(localApi, '');
+const sandbox = Sandbox.create(localApi, {iframeContainer: '.iframe__container', frameClassName: 'simple__iframe'});
 sandbox.promise
     .then(() => {
         console.log('sandbox is created!', sandbox);
