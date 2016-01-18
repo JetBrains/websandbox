@@ -15,6 +15,7 @@ sandbox.promise
             console.info("Logging from iframe is working.");
             document.body.innerHTML = "Content is generated from the iframe";
             Sandboxjs.connection.remote.testApiFn("some argument");
-        `);
+        `)
+            .then(() => console.log('Code has been ran'));
     });
 
