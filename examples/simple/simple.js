@@ -13,7 +13,7 @@ sandbox.promise
 
         sandbox.runCode(`
             console.info("Sandboxed code initialized successfully");
-            document.body.innerHTML = "Content is generated from the iframe";
+            document.body.innerHTML = "Content is generated from the sandbox";
             Sandboxjs.connection.remote.testApiFn("some argument");
 
             Sandboxjs.connection.setLocalApi({
