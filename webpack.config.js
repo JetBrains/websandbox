@@ -4,12 +4,12 @@ var path = require('path');
 module.exports = {
     entry: {
         frame: './lib/frame',
-        sandboxjs: './lib/sandbox-api'
+        websandbox: './lib/websandbox-api'
     },
     output: {
         path: __dirname + '/dist',
         libraryTarget: 'umd',
-        library: 'Sandboxjs',
+        library: 'Websandbox',
         filename: '[name].js'
     },
     module: {

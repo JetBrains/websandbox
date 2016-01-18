@@ -13,7 +13,7 @@ module.exports = {
         path: __dirname + '/dist',
         filename: '[name].js',
         libraryTarget: 'var',
-        library: 'Sandboxjs'
+        library: 'Websandbox'
     },
     module: {
         loaders: [

@@ -1,4 +1,4 @@
-import Sandbox from '../../lib/sandbox-api';
+import Sandbox from '../../lib/websandbox-api';
 
 var localApi = {
     testApiFn: function (message) {

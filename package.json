@@ -1,8 +1,8 @@
 {
-  "name": "sandboxjs",
+  "name": "websandbox",
   "version": "0.0.1",
   "description": "A sandbox library for runnung javascript inside HTML5 sandboxed iframe",
-  "main": "dist/sandbox.js",
+  "main": "dist/websandbox.js",
   "scripts": {
     "build": "rm -rf dist && webpack --devtool sourcemap",
     "lint": "eslint lib test",
@@ -11,6 +11,7 @@
   },
   "keywords": [
     "sandbox",
+    "web",
     "untrusted",
     "widget",
     "security",
