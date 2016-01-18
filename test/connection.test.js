@@ -1,7 +1,8 @@
-import Connection from '../lib/connection';
+import Connection, {TYPE_MESSAGE, TYPE_RESPONSE} from '../lib/connection';
 
 describe('Connection', function () {
     const ID = 'foo-bar';
+    const CALL_ID = 'fake-call-id';
 
     beforeEach(function () {
         this.localApi = sinon.stub({
@@ -27,8 +28,8 @@ describe('Connection', function () {
         this.callMessageListener({
             data: {
                 connectionId: 'not-match',
-                callId: 'fake-call-id',
-                type: 'message',
+                callId: CALL_ID,
+                type: TYPE_MESSAGE,
                 methodName: 'testLocalMethod',
                 arguments: []
             }
@@ -52,7 +53,7 @@ describe('Connection', function () {
             data: {
                 connectionId: ID,
                 callId: this.postMessage.getCall(0).args[0].callId,
-                type: 'response',
+                type: TYPE_RESPONSE,
                 success: true,
                 result: {foo: 'bar'}
             }
@@ -70,8 +71,8 @@ describe('Connection', function () {
                 this.callMessageListener({
                     data: {
                         connectionId: ID,
-                        callId: 'fake-call-id',
-                        type: 'message',
+                        callId: CALL_ID,
+                        type: TYPE_MESSAGE,
                         methodName: 'testLocalMethod',
                         arguments: [{foo: 'bar'}, 123]
                     }
@@ -89,15 +90,15 @@ describe('Connection', function () {
         const conn = new Connection(ID, this.postMessage, this.registerOnMessageListener);
         sinon.stub(conn, 'registerCallback', (resolve) => resolve());
 
-        this.localApi.testLocalMethod.returns({fake: 'response'});
+        this.localApi.testLocalMethod.returns({fake: TYPE_RESPONSE});
 
         conn.setLocalApi(this.localApi)
             .then(() => {
                 this.callMessageListener({
                     data: {
                         connectionId: ID,
-                        callId: 'fake-call-id',
-                        type: 'message',
+                        callId: CALL_ID,
+                        type: TYPE_MESSAGE,
                         methodName: 'testLocalMethod',
                         arguments: []
                     }
@@ -108,7 +109,7 @@ describe('Connection', function () {
                     this.postMessage.should.have.been.calledWith({
                         connectionId: ID,
                         callId: "fake-call-id",
-                        result: {fake: 'response'},
+                        result: {fake: TYPE_RESPONSE},
                         success: true,
                         type: "response"
                     }, '*');
