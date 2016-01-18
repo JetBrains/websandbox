@@ -1,3 +1,5 @@
+/* eslint-env node */
+
 function getWebpackConfig() {
     var config = require('./webpack.config');
     //Drop entries because it breaks karma-webpack
@@ -49,5 +51,5 @@ module.exports = function (config) {
         singleRun: true,
 
         concurrency: Infinity
-    })
-}
+    });
+};

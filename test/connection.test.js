@@ -21,7 +21,7 @@ describe('Connection', function () {
         conn.should.be.defined;
     });
 
-    it('Should do nothing if connection ID doesnt match', function () {
+    it('should do nothing if connection ID doesnt match', function () {
         let conn = new Connection(ID, this.postMessage, this.registerOnMessageListener);
         sinon.spy(conn, 'callLocalApi');
 
