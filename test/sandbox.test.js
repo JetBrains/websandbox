@@ -1,4 +1,4 @@
-import sandbox from '../lib/websandbox-api';
+import Sandbox from '../lib/websandbox-api';
 
 describe('Sandbox', function () {
     afterEach(() => {
@@ -7,29 +7,52 @@ describe('Sandbox', function () {
     });
 
     it('should init', function () {
-        var sand = sandbox.create({});
+        var sand = Sandbox.create({});
         sand.should.be.defined;
     });
 
     it('should create iframe', function () {
-        sandbox.create({});
+        Sandbox.create({});
         document.querySelector('iframe').should.be.defined;
     });
 
     it('should create iframe with correct src', function () {
-        sandbox.create({}, {frameHtmlFileName: 'fooooo.html'});
+        Sandbox.create({}, {frameHtmlFileName: 'fooooo.html'});
         document.querySelector('iframe').srcdoc.should.contain('frame.js');
     });
 
-    it.skip('should create sandbox and call local api back', function (done) {
+    it('should create sandbox and call local api back', function (done) {
         var localApi = {
             methodToCall: sinon.spy()
         };
 
-        sandbox.create(localApi).promise
-            .then(sandbox => sandbox.runCode('Websandbox.connection.remote.methodToCall("some argument", 123);'))
+        const sandbox = Sandbox.create(localApi);
+        sandbox.promise
+            .then(sandbox => {
+                return sandbox.runCode('Websandbox.connection.remote.methodToCall("some argument", 123);');
+            })
             .then(() => {
-                localApi.testLocalMethod.should.have.been.calledWith('some argument', 123);
+                localApi.methodToCall.should.have.been.calledWith('some argument', 123);
+                done();
+            });
+
+    });
+
+    it('should create sandbox and call sandboxed API', function (done) {
+        var localApi = {
+            confirmDynamicMethodCall: sinon.spy()
+        };
+
+        const sandbox = Sandbox.create(localApi);
+        sandbox.promise
+            .then(sandbox => sandbox.runCode(`Websandbox.connection.setLocalApi({
+                dynamicMethod: function(message) {
+                    return Websandbox.connection.remote.confirmDynamicMethodCall(message);
+                }
+            });`))
+            .then(() => sandbox.connection.remote.dynamicMethod('some message'))
+            .then(() => {
+                localApi.confirmDynamicMethodCall.should.have.been.calledWith('some message');
                 done();
             });
 
