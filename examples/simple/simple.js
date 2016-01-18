@@ -2,7 +2,7 @@ import Sandbox from '../../lib/sandbox-api';
 
 var localApi = {
     testApiFn: function (message) {
-        console.info('Host function called from iframe with: ' + message);
+        console.log('Host function called from iframe with: ' + message);
     }
 };
 
@@ -12,20 +12,22 @@ sandbox.promise
         console.log('Sandbox is created. Trying to run code inside');
 
         sandbox.runCode(`
-            console.log("Sandboxed code initialized successfully");
+            console.info("Sandboxed code initialized successfully");
             document.body.innerHTML = "Content is generated from the iframe";
             Sandboxjs.connection.remote.testApiFn("some argument");
 
             Sandboxjs.connection.setLocalApi({
                 sandboxedMethod: function(message) {
-                    console.info('sandboxed method called successfully:', message);
+                    console.info('sandboxedMethod called successfully:', message);
+                    return 'this is sandboxedMethod result';
                 }
             });
         `)
             .then(() => console.log('Code has been ran'))
             .then(() => {
-                console.log('Calling sandboxed method...');
-                sandbox.connection.remote.sandboxedMethod('hello from host');
+                console.log('Calling sandboxedMethod...');
+                sandbox.connection.remote.sandboxedMethod('hello from host')
+                    .then(res => console.log('Call was successful:', res));
             });
     });
 
