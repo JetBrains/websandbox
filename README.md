@@ -72,7 +72,6 @@ sandbox.promise
     })
     .then(res => console.log('Call was successful:', res));
 ```
-```
 
 ## Import styles
 
