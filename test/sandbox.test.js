@@ -43,14 +43,14 @@ describe('Sandbox', function () {
             methodToCall: sinon.spy()
         };
 
-        function toRunInside() {
-            Websandbox.connection.remote.methodToCall("some argument", 123);
+        function toRunInsideSandbox() {
+            Websandbox.connection.remote.methodToCall("some argument", 123); //eslint-disable-line no-undef
         }
 
         const sandbox = Sandbox.create(localApi);
         sandbox.promise
             .then(sandbox => {
-                return sandbox.run(toRunInside);
+                return sandbox.run(toRunInsideSandbox);
             })
             .then(() => {
                 localApi.methodToCall.should.have.been.calledWith('some argument', 123);
