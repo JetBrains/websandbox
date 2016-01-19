@@ -6,7 +6,7 @@ var localApi = {
     }
 };
 
-const sandbox = Sandbox.create(localApi, {iframeContainer: '.iframe__container', frameClassName: 'simple__iframe'});
+const sandbox = Sandbox.create(localApi, {frameContainer: '.iframe__container', frameClassName: 'simple__iframe'});
 sandbox.promise
     .then(() => {
         console.log('Sandbox is created. Trying to import code inside');

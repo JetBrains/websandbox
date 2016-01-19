@@ -1,4 +1,14 @@
-<script>
-    window.SANDBOX_ID = location.search.replace('?id=', '') || "{{SANDBOX_ID}}";
-</script>
-<script>${require('compile-code?asString=true!./frame.js')}</script>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <script>
+        window.SANDBOX_ID = location.search.replace('?id=', '') || "{{SANDBOX_ID}}";
+    </script>
+    <script>${require('compile-code?asString=true!./frame.js')}</script>
+</head>
+<body>
+
+</body>
+</html>
