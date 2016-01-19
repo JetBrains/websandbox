@@ -18,7 +18,7 @@ describe('Sandbox', function () {
 
     it('should create iframe with correct src', function () {
         Sandbox.create({}, {frameHtmlFileName: 'fooooo.html'});
-        document.querySelector('iframe').srcdoc.should.contain('frame.js');
+        document.querySelector('iframe').srcdoc.should.contain('window.SANDBOX_ID');
     });
 
     it('should create sandbox and call local api back', function (done) {

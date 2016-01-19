@@ -1,4 +1,4 @@
 <script>
     window.SANDBOX_ID = location.search.replace('?id=', '') || "{{SANDBOX_ID}}";
 </script>
-<script src="frame.js"></script>
+<script>${require('compile-code?asString=true!./frame.js')}</script>

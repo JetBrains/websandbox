@@ -1,28 +1,15 @@
 /* eslint-env node */
-var path = require('path');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 
-module.exports = {
+var baseConfig = require('../webpack.config');
+baseConfig.entry = {};
+var configMerger = require('webpack-config-merger');
+
+module.exports = configMerger(baseConfig, {
     entry: {
         simple: './examples/simple/simple',
         importScript: './examples/importScript/importScript',
-        scriptToImport: './examples/importScript/scriptToImport',
-        frame: './lib/frame'
-    },
-    output: {
-        path: __dirname + '/dist',
-        filename: '[name].js',
-        libraryTarget: 'var',
-        library: 'Websandbox'
-    },
-    module: {
-        loaders: [
-            {
-                test: /\.js$/,
-                include: [path.resolve('./', '../lib'), path.resolve('./', '')],
-                loader: 'babel-loader'
-            }
-        ]
+        scriptToImport: './examples/importScript/scriptToImport'
     },
     plugins: [
         new HtmlWebpackPlugin({
@@ -37,4 +24,4 @@ module.exports = {
             template: 'examples/importScript/importScript.html'
         })
     ]
-};
+});

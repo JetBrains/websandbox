@@ -12,18 +12,10 @@ module.exports = function (config) {
     config.set({
         frameworks: ['mocha', 'sinon', 'sinon-chai'],
 
-        files: [
-            'test/**/*.js',
-            {pattern: 'lib/frame.js', included: false}
-        ],
+        files: ['test/**/*.js'],
 
         preprocessors: {
-            'test/**/*.js': ['webpack', 'sourcemap'],
-            'lib/frame.js': ['webpack', 'sourcemap']
-        },
-
-        proxies: {
-            "/frame.js": "/base/lib/frame.js"
+            'test/**/*.js': ['webpack', 'sourcemap']
         },
 
         webpackServer: {quiet: true},

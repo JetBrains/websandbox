@@ -13,7 +13,9 @@ sandbox.promise
 
         sandbox.runCode(`
             console.info("Sandboxed code initialized successfully");
-            document.body.innerHTML = "Content is generated from the sandbox";
+            var title = document.createElement('h3');
+            title.innerHTML = "Content is generated from the sandbox";
+            document.body.appendChild(title);
             Websandbox.connection.remote.testApiFn("some argument");
 
             Websandbox.connection.setLocalApi({
