@@ -8,6 +8,7 @@ var configMerger = require('webpack-config-merger');
 module.exports = configMerger(baseConfig, {
     entry: {
         simple: './examples/simple/simple',
+        style: './examples/style/style',
         importScript: './examples/importScript/importScript',
         scriptToImport: './examples/importScript/scriptToImport'
     },
@@ -18,6 +19,10 @@ module.exports = configMerger(baseConfig, {
         new HtmlWebpackPlugin({
             filename: 'simple.html',
             template: 'examples/simple/simple.html'
+        }),
+        new HtmlWebpackPlugin({
+            filename: 'style.html',
+            template: 'examples/style/style.html'
         }),
         new HtmlWebpackPlugin({
             filename: 'importScript.html',
