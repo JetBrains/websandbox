@@ -12,6 +12,9 @@ module.exports = configMerger(baseConfig, {
         importScript: './examples/importScript/importScript',
         scriptToImport: './examples/importScript/scriptToImport'
     },
+    output: {
+        filename: '[name].js'
+    },
     plugins: [
         new HtmlWebpackPlugin({
             template: 'examples/index.html'
