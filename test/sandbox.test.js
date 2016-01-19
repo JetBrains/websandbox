@@ -29,7 +29,28 @@ describe('Sandbox', function () {
         const sandbox = Sandbox.create(localApi);
         sandbox.promise
             .then(sandbox => {
-                return sandbox.runCode('Websandbox.connection.remote.methodToCall("some argument", 123);');
+                return sandbox.run('Websandbox.connection.remote.methodToCall("some argument", 123);');
+            })
+            .then(() => {
+                localApi.methodToCall.should.have.been.calledWith('some argument', 123);
+                done();
+            });
+
+    });
+
+    it('should run function inside sandbox', function (done) {
+        var localApi = {
+            methodToCall: sinon.spy()
+        };
+
+        function toRunInside() {
+            Websandbox.connection.remote.methodToCall("some argument", 123);
+        }
+
+        const sandbox = Sandbox.create(localApi);
+        sandbox.promise
+            .then(sandbox => {
+                return sandbox.run(toRunInside);
             })
             .then(() => {
                 localApi.methodToCall.should.have.been.calledWith('some argument', 123);
@@ -45,7 +66,7 @@ describe('Sandbox', function () {
 
         const sandbox = Sandbox.create(localApi);
         sandbox.promise
-            .then(sandbox => sandbox.runCode(`Websandbox.connection.setLocalApi({
+            .then(sandbox => sandbox.run(`Websandbox.connection.setLocalApi({
                 dynamicMethod: function(message) {
                     return Websandbox.connection.remote.confirmDynamicMethodCall(message);
                 }

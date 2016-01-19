@@ -11,7 +11,7 @@ sandbox.promise
     .then(() => {
         console.log('Sandbox is created. Trying to run code inside');
 
-        sandbox.runCode(`
+        sandbox.run(`
             console.info("Sandboxed code initialized successfully");
             var title = document.createElement('h3');
             title.innerHTML = "Content is generated from the sandbox";
