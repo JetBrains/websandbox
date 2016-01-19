@@ -11,7 +11,6 @@ sandbox.promise
     .then(() => {
         console.log('Sandbox is created. Trying to import code inside');
 
-        sandbox.importScript('scriptToImport.js')
-            .then(() => console.log('Code has been imported'));
-    });
-
+        return sandbox.importScript('scriptToImport.js');
+    })
+    .then(() => console.log('Code has been imported'));

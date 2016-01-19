@@ -11,7 +11,7 @@ sandbox.promise
     .then(() => {
         console.log('Sandbox is created. Trying to run code inside');
 
-        sandbox.run(`
+        return sandbox.run(`
             console.info("Sandboxed code initialized successfully");
             var title = document.createElement('h3');
             title.innerHTML = "Content is generated from the sandbox";
@@ -24,12 +24,13 @@ sandbox.promise
                     return 'this is sandboxedMethod result';
                 }
             });
-        `)
-            .then(() => console.log('Code has been ran'))
-            .then(() => {
-                console.log('Calling sandboxedMethod...');
-                sandbox.connection.remote.sandboxedMethod('hello from host')
-                    .then(res => console.log('Call was successful:', res));
-            });
-    });
+        `);
+    })
+    .then(() => console.log('Code has been ran'))
+    .then(() => {
+        console.log('Calling sandboxedMethod...');
+        return sandbox.connection.remote.sandboxedMethod('hello from host');
+    })
+    .then(res => console.log('Call was successful:', res));
+
 
