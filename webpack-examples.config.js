@@ -1,7 +1,7 @@
 /* eslint-env node */
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 
-var baseConfig = require('../webpack.config');
+var baseConfig = require('./webpack.config');
 baseConfig.entry = {};
 var configMerger = require('webpack-config-merger');
 

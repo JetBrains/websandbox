@@ -7,7 +7,7 @@
     "build": "rm -rf dist && webpack --devtool sourcemap",
     "lint": "eslint lib test",
     "test": "karma start",
-    "start": "webpack-dev-server --config examples/webpack-examples.config.js --devtool inline-source-map --port 9544 --colors --progress"
+    "start": "webpack-dev-server --config webpack-examples.config.js --devtool inline-source-map --port 9544 --colors --progress"
   },
   "keywords": [
     "sandbox",
