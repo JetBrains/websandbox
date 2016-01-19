@@ -13,7 +13,7 @@ var localApi = {
     }
 };
 
-const sandbox = Sandbox.create(localApi, {iframeContainer: '.iframe__container', frameClassName: 'simple__iframe'});
+const sandbox = Sandbox.create(localApi);
 sandbox.promise
     .then(() => {
         console.log('Sandbox is created. Trying to run code inside');
@@ -39,4 +39,23 @@ sandbox.promise
     });
 
 
+```
+
+## Run function (will be stringified and called inside sandbox)
+
+Function **should** has "name" property to be able to run.
+
+```
+var localApi = {
+    testApiFn: function (message) {
+        console.log('Host function called from iframe with: ' + message);
+    }
+};
+
+Sandbox.create(localApi).promise
+    .then(function(sandbox) {
+        sandbox.run(function functionName() {
+            Websandbox.connection.remote.testApiFn("some argument");
+        });
+    });
 ```
