@@ -4,6 +4,7 @@ function getWebpackConfig() {
     var config = require('./webpack.config');
     //Drop entries because it breaks karma-webpack
     config.entry = {};
+    config.plugins = [];
     config.devtool = 'inline-source-map';
     return config;
 }

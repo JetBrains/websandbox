@@ -1,4 +1,4 @@
-import Sandbox from '../lib/websandbox-api';
+import Sandbox from '../lib/websandbox';
 
 describe('Sandbox', function () {
     afterEach(() => {

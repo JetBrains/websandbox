@@ -6,7 +6,7 @@
     <script>
         window.SANDBOX_ID = location.search.replace('?id=', '') || "{{SANDBOX_ID}}";
     </script>
-    <script>${require('compile-code?asString=true!./frame.js')}</script>
+    <script>{{IFRAME_CODE}}</script>
 </head>
 <body>
 

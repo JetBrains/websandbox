@@ -2,7 +2,7 @@
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 
 var baseConfig = require('./webpack.config');
-baseConfig.entry = {};
+delete baseConfig.entry.websandbox;
 var configMerger = require('webpack-config-merger');
 
 module.exports = configMerger(baseConfig, {
