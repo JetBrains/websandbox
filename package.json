@@ -7,6 +7,8 @@
     "build": "rm -rf dist && webpack -p --devtool sourcemap",
     "lint": "eslint lib test",
     "test": "karma start",
+    "build-examples": "webpack --config webpack-examples.config.js  --devtool source-map",
+    "deploy-examples": "surge --project ./dist --domain https://websandbox.surge.sh",
     "start": "webpack-dev-server --config webpack-examples.config.js --devtool inline-source-map --port 9544 --colors --progress"
   },
   "keywords": [
@@ -42,6 +44,7 @@
     "karma-webpack": "1.7.0",
     "mocha": "2.3.4",
     "sinon": "1.17.2",
+    "surge": "0.17.7",
     "webpack": "1.12.11",
     "webpack-config-merger": "0.0.5",
     "webpack-dev-server": "1.14.1"

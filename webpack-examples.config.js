@@ -13,6 +13,7 @@ module.exports = configMerger(baseConfig, {
         scriptToImport: './examples/importScript/scriptToImport'
     },
     output: {
+        path: __dirname + '/dist-examples',
         filename: '[name].js'
     },
     plugins: [
