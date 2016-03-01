@@ -8,7 +8,7 @@
     "lint": "eslint lib test",
     "test": "karma start",
     "build-examples": "webpack --config webpack-examples.config.js  --devtool source-map",
-    "deploy-examples": "surge --project ./dist --domain https://websandbox.surge.sh",
+    "deploy-examples": "surge --project ./dist-examples --domain https://websandbox.surge.sh",
     "start": "webpack-dev-server --config webpack-examples.config.js --devtool inline-source-map --port 9544 --colors --progress"
   },
   "keywords": [
