@@ -24,7 +24,8 @@ module.exports = {
                     path.resolve('./', 'test')
                 ],
                 loader: 'babel-loader'
-            }, {
+            },
+            {
                 test: /\.html$/,
                 include: [path.resolve('./', 'lib')],
                 loader: 'html?interpolate'
@@ -34,8 +35,9 @@ module.exports = {
     plugins: [
         new HtmlWebpackPlugin({
             filename: 'frame.html',
-            templateContent: function (templateParams, compilation) {
-                var iframeCompiledChunk = compilation.assets['frame.js'].children[0]._value;
+            inject: false,
+            templateContent: function (options) {
+                var iframeCompiledChunk = options.compilation.assets['frame.js'].source();
                 var tpl = fs.readFileSync('lib/iframe-src.html', {encoding: 'utf8'});
                 return tpl.replace('{{IFRAME_CODE}}', iframeCompiledChunk);
             }

@@ -18,17 +18,21 @@ module.exports = configMerger(baseConfig, {
     },
     plugins: [
         new HtmlWebpackPlugin({
+            inject: false,
             template: 'examples/index.html'
         }),
         new HtmlWebpackPlugin({
+            inject: false,
             filename: 'simple.html',
             template: 'examples/simple/simple.html'
         }),
         new HtmlWebpackPlugin({
+            inject: false,
             filename: 'style.html',
             template: 'examples/style/style.html'
         }),
         new HtmlWebpackPlugin({
+            inject: false,
             filename: 'importScript.html',
             template: 'examples/importScript/importScript.html'
         })
