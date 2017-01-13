@@ -19,6 +19,12 @@
     "security",
     "restricted"
   ],
+  "files": [
+    "dist",
+    "lib",
+    ".babelrc",
+    "webpack.config.js"
+  ],
   "author": "Andrey Skladchikov",
   "license": "MIT",
   "devDependencies": {
