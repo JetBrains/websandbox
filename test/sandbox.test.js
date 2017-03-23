@@ -17,7 +17,7 @@ describe('Sandbox', function () {
     });
 
     it('should create iframe with correct src', function () {
-        Sandbox.create({}, {frameHtmlFileName: 'fooooo.html'});
+        Sandbox.create({});
         document.querySelector('iframe').srcdoc.should.contain('window.SANDBOX_ID');
     });
 
