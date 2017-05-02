@@ -1,11 +1,9 @@
 /* eslint-env node */
-var HtmlWebpackPlugin = require('html-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
-var baseConfig = require('./webpack.config');
-delete baseConfig.entry.websandbox;
-var configMerger = require('webpack-config-merger');
+const baseConfig = require('./webpack.config');
 
-module.exports = configMerger(baseConfig, {
+module.exports = {
     entry: {
         simple: './examples/simple/simple',
         style: './examples/style/style',
@@ -16,6 +14,7 @@ module.exports = configMerger(baseConfig, {
         path: __dirname + '/dist-examples',
         filename: '[name].js'
     },
+    module: baseConfig.module,
     plugins: [
         new HtmlWebpackPlugin({
             inject: false,
@@ -37,4 +36,4 @@ module.exports = configMerger(baseConfig, {
             template: 'examples/importScript/importScript.html'
         })
     ]
-});
+};

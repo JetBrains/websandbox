@@ -12,7 +12,7 @@ module.exports = {
         filename: '[name].js'
     },
     module: {
-        loaders: [
+        rules: [
             {
                 test: /\.js$/,
                 include: [
@@ -20,12 +20,12 @@ module.exports = {
                     path.resolve('./', 'lib'),
                     path.resolve('./', 'test')
                 ],
-                loader: 'babel-loader'
+                use: ['babel-loader']
             },
             {
                 test: /\.html$/,
                 include: [path.resolve('./', 'lib')],
-                loader: 'html?interpolate'
+                use: ['html-loader?interpolate']
             }
         ]
     }

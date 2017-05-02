@@ -17,5 +17,6 @@ script:
   - npm run deploy-examples
 
 cache:
+  yarn: true
   directories:
     - node_modules
