@@ -18,7 +18,25 @@ describe('Sandbox', function () {
 
     it('should create iframe with correct src', function () {
         Sandbox.create({});
-        document.querySelector('iframe').srcdoc.should.contain('window.SANDBOX_ID');
+        document.querySelector('iframe').srcdoc.should.contain(`this.id = 'websandbox-`);
+    });
+
+    it('should support passing custom frameContent', function () {
+        Sandbox.create({}, {frameContent: `
+            <html>
+                <head>
+                </head>
+                <body>this is custom frame content</body>
+            </html>
+        `});
+
+        document.querySelector('iframe').srcdoc.should.contain(`this.id = 'websandbox-`);
+        document.querySelector('iframe').srcdoc.should.contain('this is custom frame content');
+    });
+
+    it('should add base tag if baseUrl provided', function () {
+        Sandbox.create({}, {baseUrl: 'http://example.com'});
+        document.querySelector('iframe').srcdoc.should.contain(`<base href="http://example.com"/>`);
     });
 
     it('should create sandbox and call local api back', function (done) {
