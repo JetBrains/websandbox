@@ -117,4 +117,18 @@ describe('Connection', function () {
                 }, 10);
             });
     });
+
+    it('should resolve remote methods wait promise', function (done) {
+        const resolved = sinon.spy();
+        const conn = new Connection(ID, this.postMessage, this.registerOnMessageListener);
+        
+        Promise.resolve(conn.remoteMethodsWaitPromise).then(resolved);
+
+        new Promise(resolve => setTimeout(resolve))
+            .then(() => resolved.should.not.have.been.called)
+            .then(() => conn.setInterface(['testMethod']))
+            .then(() => new Promise(resolve => setTimeout(resolve)))
+            .then(() => resolved.should.have.been.called)
+            .then(() => done());
+    });
 });
