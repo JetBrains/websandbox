@@ -39,6 +39,14 @@ describe('Sandbox', function () {
         document.querySelector('iframe').srcdoc.should.contain(`<base href="http://example.com"/>`);
     });
 
+    it('should inject initialization code', function () {
+        Sandbox.create({}, {
+            codeToRunBeforeInit: `console.log('foo')`
+        });
+        document.querySelector('iframe').srcdoc.should.contain(`<script>console.log('foo')</script>`);
+
+    });
+
     it('should create sandbox and call local api back', function (done) {
         var localApi = {
             methodToCall: sinon.spy()
