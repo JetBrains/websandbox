@@ -39,6 +39,16 @@ describe('Sandbox', function () {
         document.querySelector('iframe').srcdoc.should.contain(`<base href="http://example.com"/>`);
     });
 
+    it('should add only "allow-scripts" sandbox attribute by default', function () {
+        Sandbox.create({});
+        document.querySelector('iframe').sandbox.value.should.equal('allow-scripts');
+    });
+
+    it('should add "allow-pointer-lock" sandbox attribute if option is set', function () {
+        Sandbox.create({}, {allowPointerLock: true});
+        document.querySelector('iframe').sandbox.value.should.equal('allow-scripts allow-pointer-lock');
+    });
+
     it('should inject initialization code', function () {
         Sandbox.create({}, {
             codeToRunBeforeInit: `console.log('foo')`
