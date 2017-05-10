@@ -58,7 +58,6 @@
   "dependencies": {
     "an-uuid": "1.0.2",
     "compile-code-loader": "0.0.2",
-    "file-loader": "0.11.1",
-    "html-loader": "0.4.5"
+    "file-loader": "0.11.1"
   }
 }
