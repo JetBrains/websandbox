@@ -54,7 +54,13 @@ describe('Sandbox', function () {
             codeToRunBeforeInit: `console.log('foo')`
         });
         document.querySelector('iframe').srcdoc.should.contain(`<script>console.log('foo')</script>`);
+    });
 
+    it('should inject initial styles', function () {
+        Sandbox.create({}, {
+            initialStyles: `div {color: red;}`
+        });
+        document.querySelector('iframe').srcdoc.should.contain(`<style>div {color: red;}</style>`);
     });
 
     it('should create sandbox and call local api back', function (done) {
