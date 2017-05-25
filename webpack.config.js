@@ -3,7 +3,8 @@ var path = require('path');
 
 module.exports = {
     entry: {
-        websandbox: './lib/websandbox'
+        websandbox: './lib/websandbox',
+        frame: './lib/frame'
     },
     output: {
         path: __dirname + '/dist',
