@@ -1,4 +1,5 @@
 import Sandbox from '../lib/websandbox';
+import Connection from '../lib/connection';
 
 describe('Sandbox', function () {
     afterEach(() => {
@@ -78,6 +79,27 @@ describe('Sandbox', function () {
                 done();
             });
 
+    });
+
+    it.skip('should not pass messages to neighbour sandboxes', function () {
+        var localApi = {methodToCall: sinon.spy()};
+
+        const sandbox1 = Sandbox.create(localApi);
+        const sandbox2 = Sandbox.create(localApi);
+        
+        return Promise.all([sandbox1.promise, sandbox2.promise])
+            .then(() => {
+                sandbox1.connection.onMessageListener = (e) => Connection.prototype.onMessageListener.call(sandbox1.connection, e);
+                sinon.spy(sandbox1.connection, 'onMessageListener');
+                sandbox2.connection.onMessageListener = (e) => Connection.prototype.onMessageListener.call(sandbox2.connection, e);
+                sinon.spy(sandbox2.connection, 'onMessageListener');
+
+                return sandbox2.run('Websandbox.connection.remote.methodToCall("some argument", 123);');
+            })
+            .then(() => {
+                sandbox1.connection.onMessageListener.should.not.have.been.called;
+                sandbox2.connection.onMessageListener.should.have.been.called;
+            });
     });
 
     it('should run function inside sandbox', function (done) {
