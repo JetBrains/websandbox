@@ -17,9 +17,9 @@ describe('Sandbox', function () {
         document.querySelector('iframe').should.be.defined;
     });
 
-    it('should create iframe with correct src', function () {
+    it('should create iframe with correct srcdoc', function () {
         Sandbox.create({});
-        document.querySelector('iframe').srcdoc.should.contain(`this.id = 'websandbox-`);
+        document.querySelector('iframe').srcdoc.should.contain(`TYPE_SET_INTERFACE`);
     });
 
     it('should support passing custom frameContent', function () {
@@ -31,7 +31,7 @@ describe('Sandbox', function () {
             </html>
         `});
 
-        document.querySelector('iframe').srcdoc.should.contain(`this.id = 'websandbox-`);
+        document.querySelector('iframe').srcdoc.should.contain(`TYPE_SET_INTERFACE`);
         document.querySelector('iframe').srcdoc.should.contain('this is custom frame content');
     });
 
@@ -81,11 +81,12 @@ describe('Sandbox', function () {
 
     });
 
-    it.skip('should not pass messages to neighbour sandboxes', function () {
-        var localApi = {methodToCall: sinon.spy()};
+    it('should not pass messages to neighbour sandboxes because their event.souce should not be the same', function () {
+        var localApi1 = {methodToCall: sinon.spy()};
+        var localApi2 = {methodToCall: sinon.spy()};
 
-        const sandbox1 = Sandbox.create(localApi);
-        const sandbox2 = Sandbox.create(localApi);
+        const sandbox1 = Sandbox.create(localApi1);
+        const sandbox2 = Sandbox.create(localApi2);
         
         return Promise.all([sandbox1.promise, sandbox2.promise])
             .then(() => {

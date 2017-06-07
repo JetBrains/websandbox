@@ -1,7 +1,6 @@
 import Connection, {TYPE_MESSAGE, TYPE_RESPONSE} from '../lib/connection';
 
 describe('Connection', function () {
-    const ID = 'foo-bar';
     const CALL_ID = 'fake-call-id';
 
     beforeEach(function () {
@@ -17,28 +16,12 @@ describe('Connection', function () {
     });
 
     it('should init onnection', function () {
-        let conn = new Connection(ID, this.postMessage, this.registerOnMessageListener);
+        let conn = new Connection(this.postMessage, this.registerOnMessageListener);
         conn.should.be.defined;
     });
 
-    it('should do nothing if connection ID doesnt match', function () {
-        let conn = new Connection(ID, this.postMessage, this.registerOnMessageListener);
-        sinon.spy(conn, 'callLocalApi');
-
-        this.callMessageListener({
-            data: {
-                connectionId: 'not-match',
-                callId: CALL_ID,
-                type: TYPE_MESSAGE,
-                methodName: 'testLocalMethod',
-                arguments: []
-            }
-        });
-        conn.callLocalApi.should.not.have.been.called;
-    });
-
     it('should call remote and wait for response', function (done) {
-        let conn = new Connection(ID, this.postMessage, this.registerOnMessageListener);
+        let conn = new Connection(this.postMessage, this.registerOnMessageListener);
         conn.setInterface(['testMethod']);
 
         conn.remote.testMethod('test', 123)
@@ -51,7 +34,6 @@ describe('Connection', function () {
         //Emulate response
         this.callMessageListener({
             data: {
-                connectionId: ID,
                 callId: this.postMessage.getCall(0).args[0].callId,
                 type: TYPE_RESPONSE,
                 success: true,
@@ -62,7 +44,7 @@ describe('Connection', function () {
 
     it('should call local API on remote call', function (done) {
         //First notify connection that localApi was registered on other side
-        const conn = new Connection(ID, this.postMessage, this.registerOnMessageListener);
+        const conn = new Connection(this.postMessage, this.registerOnMessageListener);
         sinon.stub(conn, 'registerCallback', (resolve) => resolve());
 
         conn.setLocalApi(this.localApi)
@@ -70,7 +52,6 @@ describe('Connection', function () {
 
                 this.callMessageListener({
                     data: {
-                        connectionId: ID,
                         callId: CALL_ID,
                         type: TYPE_MESSAGE,
                         methodName: 'testLocalMethod',
@@ -87,7 +68,7 @@ describe('Connection', function () {
     });
 
     it('should response to remote call', function (done) {
-        const conn = new Connection(ID, this.postMessage, this.registerOnMessageListener);
+        const conn = new Connection(this.postMessage, this.registerOnMessageListener);
         sinon.stub(conn, 'registerCallback', (resolve) => resolve());
 
         this.localApi.testLocalMethod.returns({fake: TYPE_RESPONSE});
@@ -96,7 +77,6 @@ describe('Connection', function () {
             .then(() => {
                 this.callMessageListener({
                     data: {
-                        connectionId: ID,
                         callId: CALL_ID,
                         type: TYPE_MESSAGE,
                         methodName: 'testLocalMethod',
@@ -107,7 +87,6 @@ describe('Connection', function () {
             .then(() => {
                 setTimeout(() => {
                     this.postMessage.should.have.been.calledWith({
-                        connectionId: ID,
                         callId: "fake-call-id",
                         result: {fake: TYPE_RESPONSE},
                         success: true,
@@ -120,7 +99,7 @@ describe('Connection', function () {
 
     it('should resolve remote methods wait promise', function (done) {
         const resolved = sinon.spy();
-        const conn = new Connection(ID, this.postMessage, this.registerOnMessageListener);
+        const conn = new Connection(this.postMessage, this.registerOnMessageListener);
         
         Promise.resolve(conn.remoteMethodsWaitPromise).then(resolved);
 

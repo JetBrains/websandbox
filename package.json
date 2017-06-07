@@ -5,6 +5,7 @@
   "main": "dist/websandbox.js",
   "scripts": {
     "build": "rm -rf dist && webpack --bail --devtool sourcemap",
+    "prepublish": "npm run build",
     "lint": "eslint lib test",
     "test": "karma start",
     "build-examples": "webpack --bail --config webpack-examples.config.js  --devtool source-map",
@@ -55,7 +56,6 @@
     "webpack-dev-server": "2.4.5"
   },
   "dependencies": {
-    "an-uuid": "1.0.2",
     "compile-code-loader": "0.1.6",
     "file-loader": "0.11.1"
   }
