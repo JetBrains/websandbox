@@ -42,6 +42,28 @@ describe('Connection', function () {
         });
     });
 
+    it('should handle failure of remote method', function (done) {
+        let conn = new Connection(this.postMessage, this.registerOnMessageListener);
+        conn.setInterface(['testMethod']);
+
+        conn.remote.testMethod('test', 123)
+            .catch(err => {
+                err.should.eql({message: 'bar'});
+                done();
+            });
+
+
+        //Emulate response
+        this.callMessageListener({
+            data: {
+                callId: this.postMessage.getCall(0).args[0].callId,
+                type: TYPE_RESPONSE,
+                success: false,
+                result: {message: 'bar'}
+            }
+        });
+    });
+
     it('should call local API on remote call', function (done) {
         //First notify connection that localApi was registered on other side
         const conn = new Connection(this.postMessage, this.registerOnMessageListener);
