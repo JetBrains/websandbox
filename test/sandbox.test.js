@@ -42,11 +42,11 @@ describe('Sandbox', function () {
 
     it('should add only "allow-scripts" sandbox attribute by default', function () {
         Sandbox.create({});
-        document.querySelector('iframe').sandbox.value.should.equal('allow-scripts');
+        document.querySelector('iframe').sandbox.value.should.equal('allow-scripts ');
     });
 
-    it('should add "allow-pointer-lock" sandbox attribute if option is set', function () {
-        Sandbox.create({}, {allowPointerLock: true});
+    it('should allow additional sandbox attrs', function () {
+        Sandbox.create({}, {sandboxAdditionalAttributes: 'allow-pointer-lock'});
         document.querySelector('iframe').sandbox.value.should.equal('allow-scripts allow-pointer-lock');
     });
 
