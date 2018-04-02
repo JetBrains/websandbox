@@ -143,4 +143,21 @@ describe('Sandbox', function () {
             });
 
     });
+
+    it('should pass Error instance back', function (done) {
+        const sandbox = Sandbox.create({});
+        
+        sandbox.promise
+            .then(sandbox => sandbox.run(`Websandbox.connection.setLocalApi({
+                dynamicMethod: function() {
+                    console.log('inside dynamic method');
+                    return new Promise((resolve, reject) => reject(new Error('fake error')));
+                }
+            });`))
+            .then(() => sandbox.connection.remote.dynamicMethod())
+            .catch((err) => {
+                err.message.should.equal('Error: fake error');
+                done();
+            });
+    });
 });
