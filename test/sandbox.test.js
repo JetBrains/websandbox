@@ -156,7 +156,7 @@ describe('Sandbox', function () {
             });`))
             .then(() => sandbox.connection.remote.dynamicMethod())
             .catch((err) => {
-                err.message.should.equal('Error: fake error');
+                err.message.should.equal('fake error');
                 done();
             });
     });
