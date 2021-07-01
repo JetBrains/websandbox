@@ -17,7 +17,7 @@ describe('Connection', function () {
 
     it('should init onnection', function () {
         let conn = new Connection(this.postMessage, this.registerOnMessageListener);
-        conn.should.be.defined;
+        conn.should.not.be.undefined;
     });
 
     it('should call remote and wait for response', function (done) {
@@ -67,7 +67,7 @@ describe('Connection', function () {
     it('should call local API on remote call', function (done) {
         //First notify connection that localApi was registered on other side
         const conn = new Connection(this.postMessage, this.registerOnMessageListener);
-        sinon.stub(conn, 'registerCallback', (resolve) => resolve());
+        sinon.stub(conn, 'registerCallback').callsFake((resolve) => resolve());
 
         conn.setLocalApi(this.localApi)
             .then(() => {
@@ -91,7 +91,7 @@ describe('Connection', function () {
 
     it('should response to remote call', function (done) {
         const conn = new Connection(this.postMessage, this.registerOnMessageListener);
-        sinon.stub(conn, 'registerCallback', (resolve) => resolve());
+        sinon.stub(conn, 'registerCallback').callsFake((resolve) => resolve());
 
         this.localApi.testLocalMethod.returns({fake: TYPE_RESPONSE});
 

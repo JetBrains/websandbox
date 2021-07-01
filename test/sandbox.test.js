@@ -9,12 +9,12 @@ describe('Sandbox', function () {
 
     it('should init', function () {
         var sand = Sandbox.create({});
-        sand.should.be.defined;
+        sand.should.not.be.undefined;
     });
 
     it('should create iframe', function () {
         Sandbox.create({});
-        document.querySelector('iframe').should.be.defined;
+        document.querySelector('iframe').should.not.be.undefined;
     });
 
     it('should create iframe with correct srcdoc', function () {
