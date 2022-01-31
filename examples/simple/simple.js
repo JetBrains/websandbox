@@ -1,11 +1,12 @@
 import Sandbox from '../../lib/websandbox';
-
+console.log('>>>');
 var localApi = {
     testApiFn: function (message) {
         console.log('Host function called from iframe with: ' + message);
     }
 };
 
+console.log('>>>');
 const sandbox = Sandbox.create(localApi, {frameContainer: '.iframe__container', frameClassName: 'simple__iframe'});
 sandbox.promise
     .then(() => {

@@ -4,6 +4,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const baseConfig = require('./webpack.config');
 
 module.exports = {
+    mode: 'development',
     entry: {
         simple: './examples/simple/simple',
         style: './examples/style/style',
@@ -21,19 +22,19 @@ module.exports = {
             template: 'examples/index.html'
         }),
         new HtmlWebpackPlugin({
-            inject: false,
             filename: 'simple.html',
-            template: 'examples/simple/simple.html'
+            template: 'examples/simple/simple.html',
+            chunks: ['simple']
         }),
         new HtmlWebpackPlugin({
-            inject: false,
             filename: 'style.html',
-            template: 'examples/style/style.html'
+            template: 'examples/style/style.html',
+            chunks: ['style']
         }),
         new HtmlWebpackPlugin({
-            inject: false,
             filename: 'importScript.html',
-            template: 'examples/importScript/importScript.html'
+            template: 'examples/importScript/importScript.html',
+            chunks: ['importScript']
         })
     ]
 };

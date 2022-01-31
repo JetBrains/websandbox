@@ -4,13 +4,13 @@
   "description": "A sandbox library for runnung javascript inside HTML5 sandboxed iframe",
   "main": "dist/websandbox.js",
   "scripts": {
-    "build": "rm -rf dist && webpack --bail --devtool sourcemap",
+    "build": "rm -rf dist && webpack --bail --mode production --devtool source-map",
     "prepublish": "npm run build",
     "lint": "eslint lib test",
     "test": "karma start",
     "build-examples": "webpack --bail --config webpack-examples.config.js  --devtool source-map",
     "deploy-examples": "surge --project ./dist-examples --domain https://websandbox.surge.sh",
-    "start": "webpack-dev-server --config webpack-examples.config.js --devtool inline-source-map --port 9544 --colors --progress"
+    "start": "webpack-dev-server --config webpack-examples.config.js --devtool inline-source-map --port 9544 --progress"
   },
   "keywords": [
     "sandbox",
@@ -37,11 +37,11 @@
     "babel-plugin-transform-object-assign": "6.22.0",
     "babel-preset-es2015": "6.24.0",
     "chai": "4.3.4",
-    "compile-code-loader": "^0.2.0",
-    "electron": "13.1.4",
+    "compile-code-loader": "^1.0.0",
+    "electron": "16.0.8",
     "eslint": "3.19.0",
     "eslint-config-defaults": "9.0.0",
-    "html-webpack-plugin": "2.28.0",
+    "html-webpack-plugin": "5.5.0",
     "karma": "6.3.4",
     "karma-chai": "0.1.0",
     "karma-chrome-launcher": "3.1.0",
@@ -50,13 +50,14 @@
     "karma-sinon": "1.0.5",
     "karma-sinon-chai": "2.0.2",
     "karma-sourcemap-loader": "0.3.8",
-    "karma-webpack": "2.0.3",
+    "karma-webpack": "5.0.0",
     "mocha": "3.2.0",
     "sinon": "11.1.1",
     "sinon-chai": "^3.7.0",
     "surge": "^0.19.0",
-    "webpack": "2.4.1",
-    "webpack-dev-server": "2.4.5"
+    "webpack": "5.67.0",
+    "webpack-cli": "^4.9.2",
+    "webpack-dev-server": "4.7.3"
   },
   "dependencies": {}
 }
