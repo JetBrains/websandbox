@@ -1,5 +1,5 @@
 import Sandbox from '../../lib/websandbox';
-console.log('>>>');
+
 var localApi = {
     testApiFn: function (message) {
         console.log('Host function called from iframe with: ' + message);
