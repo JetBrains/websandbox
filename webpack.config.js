@@ -5,6 +5,7 @@ module.exports = () => {
   return {
     mode: 'development',
     devtool: 'none',
+    target: 'web',
     entry: {
       websandbox: './lib/websandbox',
       frame: './lib/frame'
@@ -15,16 +16,18 @@ module.exports = () => {
       library: 'Websandbox',
       filename: '[name].js'
     },
+    resolve: {
+      extensions: ['.ts', '.js'],
+    },
     module: {
       rules: [
         {
-          test: /\.js$/,
+          test: /\.ts$/,
           include: [
-            path.resolve('./', 'examples'),
-            path.resolve('./', 'lib'),
-            path.resolve('./', 'test')
+            path.resolve('./', 'lib')
           ],
-          use: ['babel-loader']
+          loader: 'ts-loader',
+          options: {}
         },
         {
           test: /\.html$/,

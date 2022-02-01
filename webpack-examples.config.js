@@ -15,7 +15,18 @@ module.exports = {
         path: __dirname + '/dist-examples',
         filename: '[name].js'
     },
-    module: baseConfig.module,
+    module: {
+        rules: [
+            {
+                test: /\.ts$/,
+                loader: 'ts-loader',
+                options: {}
+            },
+        ]
+    },
+    resolve: {
+        extensions: ['.ts', '.js'],
+    },
     plugins: [
         new HtmlWebpackPlugin({
             inject: false,

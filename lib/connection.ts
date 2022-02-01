@@ -1,8 +1,11 @@
+import type {API} from "./types";
+
 export const TYPE_MESSAGE = 'message';
 export const TYPE_RESPONSE = 'response';
 export const TYPE_SET_INTERFACE = 'set-interface';
 export const TYPE_SERVICE_MESSAGE = 'service-message';
 
+// @ts-expect-error
 const isIE11 = !!window.MSInputMethodContext && !!document.documentMode;
 
 const defaultOptions = {
@@ -11,28 +14,44 @@ const defaultOptions = {
   allowedSenderOrigin: undefined
 };
 
+export interface ConnectionOptions {
+  allowedSenderOrigin?: string;
+}
+
 class Connection {
-  constructor(postMessage, registerOnMessageListener, options) {
-    this.options = Object.assign({}, defaultOptions, options);
+  incrementalID: number;
+  options: ConnectionOptions;
+  postMessage: typeof window.postMessage;
+  remote: API = {};
+  serviceMethods: API = {};
+  localApi: API = {};
+  callbacks: {[key: string]: {successCallback: Function, failureCallback: Function}} = {};
+  remoteMethodsWaitPromise: Promise<void>;
+  _resolveRemoteMethodsPromise: null | (() => void) = null;
+
+  constructor(
+    postMessage: typeof window.postMessage, 
+    registerOnMessageListener: (listener: (e: MessageEvent) => void) => void, 
+    options: ConnectionOptions = {}
+  ) {
+    this.options = {...defaultOptions, ...options};
     //Random number between 0 and 100000
     this.incrementalID = Math.floor(Math.random() * 100000);
 
     this.postMessage = postMessage;
-    this.remote = {};
-    this.callbacks = {};
 
     this.remoteMethodsWaitPromise = new Promise(resolve => {
       this._resolveRemoteMethodsPromise = resolve;
     });
 
-    registerOnMessageListener((...args) => this.onMessageListener(...args));
+    registerOnMessageListener((e: MessageEvent) => this.onMessageListener(e));
   }
 
   /**
      * Listens to remote messages. Calls local method if it is called outside or call stored callback if it is response.
      * @param e - onMessage event
      */
-  onMessageListener(e) {
+  onMessageListener(e: MessageEvent) {
     const data = e.data;
 
     const {allowedSenderOrigin} = this.options;
@@ -58,7 +77,7 @@ class Connection {
     }
   }
 
-  postMessageToOtherSide(dataToPost) {
+  postMessageToOtherSide(dataToPost: any) {
     this.postMessage(dataToPost, '*');
   }
 
@@ -66,17 +85,17 @@ class Connection {
      * Sets remote interface methods
      * @param remote - hash with keys of remote API methods. Values is ignored
      */
-  setInterface(remoteMethods) {
+  setInterface(remoteMethods: API) {
     this.remote = {};
 
     remoteMethods.forEach(
-      key => this.remote[key] = this.createMethodWrapper(key)
+      (key: string) => this.remote[key] = this.createMethodWrapper(key)
     );
 
-    this._resolveRemoteMethodsPromise();
+    this._resolveRemoteMethodsPromise?.();
   }
 
-  setLocalApi(api) {
+  setLocalApi(api: API) {
     return new Promise((resolve, reject) => {
       const id = this.registerCallback(resolve, reject);
       this.postMessageToOtherSide({
@@ -87,7 +106,7 @@ class Connection {
     }).then(() => this.localApi = api);
   }
 
-  setServiceMethods(api) {
+  setServiceMethods(api: API) {
     this.serviceMethods = api;
   }
 
@@ -97,7 +116,7 @@ class Connection {
      * @param args
      * @returns {Promise.<*>|string}
      */
-  callLocalApi(methodName, args) {
+  callLocalApi(methodName: string, args: any[]) {
     return Promise.resolve(this.localApi[methodName](...args));
   }
 
@@ -107,7 +126,7 @@ class Connection {
      * @param args
      * @returns {Promise.<*>}
      */
-  callLocalServiceMethod(methodName, args) {
+  callLocalServiceMethod(methodName: string, args: any[]) {
     if (!this.serviceMethods[methodName]) {
       throw new Error(`Serivce method ${methodName} is not registered`);
     }
@@ -119,8 +138,8 @@ class Connection {
      * @param methodName - method to wrap
      * @returns {Function} - function to call as remote API interface
      */
-  createMethodWrapper(methodName) {
-    return (...args) => {
+  createMethodWrapper(methodName: string) {
+    return (...args: any[]) => {
       return this.callRemoteMethod(methodName, ...args);
     };
   }
@@ -131,7 +150,7 @@ class Connection {
      * @param methodName
      * @param args
      */
-  callRemoteMethod(methodName, ...args) {
+  callRemoteMethod(methodName: string, ...args: any[]) {
     return new Promise((resolve, reject) => {
       const id = this.registerCallback(resolve, reject);
       this.postMessageToOtherSide({
@@ -149,7 +168,7 @@ class Connection {
      * @param args
      * @returns {*}
      */
-  callRemoteServiceMethod(methodName, ...args) {
+  callRemoteServiceMethod(methodName: string, ...args: any[]) {
     return new Promise((resolve, reject) => {
       const id = this.registerCallback(resolve, reject);
       this.postMessageToOtherSide({
@@ -166,13 +185,13 @@ class Connection {
      * @param id - remote call ID
      * @param result - result to pass to calling function
      */
-  responseOtherSide(id, result, success = true) {
+  responseOtherSide(id: string, result?: any, success = true) {
     if (result instanceof Error) {
       // Error could be non-serializable, so we copy properties manually
       result = [...Object.keys(result), 'message'].reduce((acc, it) => {
         acc[it] = result[it];
         return acc;
-      }, {});
+      }, {} as {[k: string]: any});
     }
 
     const doPost = () =>
@@ -197,12 +216,10 @@ class Connection {
     }
   }
 
-  /**
+  /*
      * Stores callbacks to call later when remote call will be answered
-     * @param successCallback
-     * @param failureCallback
      */
-  registerCallback(successCallback, failureCallback) {
+  registerCallback(successCallback: Function, failureCallback: Function) {
     const id = (++this.incrementalID).toString();
     this.callbacks[id] = {successCallback, failureCallback};
     return id;
@@ -214,7 +231,7 @@ class Connection {
      * @param success - was call successful
      * @param result - result of remote call
      */
-  popCallback(id, success, result) {
+  popCallback(id: string, success: boolean, result: any) {
     if (success) {
       this.callbacks[id].successCallback(result);
     } else {
