@@ -27,7 +27,6 @@
     "dist",
     "lib"
   ],
-  "types": "index.d.ts",
   "author": "Andrey Skladchikov",
   "license": "Apache-2.0",
   "devDependencies": {
