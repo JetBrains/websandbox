@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Simple example</title>
+    <style>
+        .iframe__container {
+            position: relative;
+            height: 400px;
+        }
+        .simple__iframe {
+            position: absolute;
+            left: calc(50% - 200px);
+            width: 400px;
+            height: 100%;
+            border: solid 1px silver;
+        }
+    </style>
+<script defer src="simple.js"></script></head>
+<body>
+    <div>
+        <h3>Iframe should be here:</h3>
+        <div class="iframe__container"></div>
+    </div>
+    <div>Some bottom text</div>
+</body>
+</html>
