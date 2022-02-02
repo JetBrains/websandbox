@@ -1,6 +1,6 @@
 {
   "name": "websandbox",
-  "version": "0.5.3",
+  "version": "1.0.0-beta.1",
   "description": "A sandbox library for runnung javascript inside HTML5 sandboxed iframe",
   "main": "dist/websandbox.js",
   "scripts": {
