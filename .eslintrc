@@ -1,12 +1,19 @@
 {
-  "parser": "babel-eslint",
+  "parser": "@typescript-eslint/parser",
+  "plugins": [
+    "@typescript-eslint"
+  ],
   "extends": [
-    "defaults"
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended"
   ],
   "rules": {
-    "no-unused-vars": [2, {"vars": "local", "args": "none"}],
     "semi": [2, "always"],
-    "no-console": 1
+    "no-console": 1,
+    "@typescript-eslint/ban-types": "off",
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/no-empty-function": "off",
+    "@typescript-eslint/no-non-null-assertion": "off"
   },
   "env": {
     "browser": true,

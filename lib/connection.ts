@@ -5,7 +5,7 @@ export const TYPE_RESPONSE = 'response';
 export const TYPE_SET_INTERFACE = 'set-interface';
 export const TYPE_SERVICE_MESSAGE = 'service-message';
 
-// @ts-expect-error
+// @ts-expect-error this is IE11 obsolete check. It is not typed
 const isIE11 = !!window.MSInputMethodContext && !!document.documentMode;
 
 const defaultOptions = {

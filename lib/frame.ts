@@ -26,26 +26,26 @@ class Frame {
      * @param code
      */
   runCode(code: string) {
-    var scriptTag = document.createElement('script');
+    const scriptTag = document.createElement('script');
     scriptTag.innerHTML = code;
     document.getElementsByTagName('head')[0].appendChild(scriptTag);
   }
 
   importScript(scriptUrl: string) {
-    var scriptTag = document.createElement('script');
+    const scriptTag = document.createElement('script');
     scriptTag.src = scriptUrl;
     document.getElementsByTagName('head')[0].appendChild(scriptTag);
     return new Promise<void>(resolve => scriptTag.onload = () => resolve());
   }
 
   injectStyle(style: string) {
-    var styleTag = document.createElement('style');
+    const styleTag = document.createElement('style');
     styleTag.innerHTML = style;
     document.getElementsByTagName('head')[0].appendChild(styleTag);
   }
 
   importStyle(styleUrl: string) {
-    var linkTag = document.createElement('link');
+    const linkTag = document.createElement('link');
     linkTag.rel = 'stylesheet';
     linkTag.href = styleUrl;
     document.getElementsByTagName('head')[0].appendChild(linkTag);
@@ -54,7 +54,7 @@ class Frame {
 
 const Websandbox = new Frame();
 
-// @ts-expect-error
+// @ts-expect-error exporting library to global namespace
 window.Websandbox = window.Websandbox || Websandbox;
 
 module.exports = Websandbox; // eslint-disable-line

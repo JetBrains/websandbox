@@ -1,5 +1,5 @@
 import Connection from './connection';
-// @ts-expect-error
+// @ts-expect-error loader-based input
 import CompiledFrameScript from 'compile-code-loader!./frame.ts';
 import { API } from './types';
 
@@ -132,7 +132,7 @@ class Websandbox {
     }
 
     const frame = document.createElement('iframe');
-    // @ts-expect-error
+    // @ts-expect-error typings error
     frame.sandbox = `allow-scripts ${this.options.sandboxAdditionalAttributes}`;
     frame.className = this.options.frameClassName ?? '';
     if (this.options.allowFullScreen) {
