@@ -10,7 +10,7 @@
     "lint": "eslint lib test",
     "test": "karma start",
     "build-examples": "webpack --bail --config webpack-examples.config.js  --devtool source-map",
-    "deploy-examples": "surge --project ./dist-examples --domain https://websandbox.surge.sh",
+    "deploy-examples": "echo 'not implemented'",
     "start": "webpack-dev-server --config webpack-examples.config.js --devtool inline-source-map --port 9544 --progress"
   },
   "keywords": [
@@ -23,10 +23,7 @@
   ],
   "files": [
     "dist",
-    "lib",
-    "index.d.ts",
-    ".babelrc",
-    "webpack.config.js"
+    "lib"
   ],
   "types": "index.d.ts",
   "author": "Andrey Skladchikov",
@@ -34,7 +31,7 @@
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.10.2",
     "@typescript-eslint/parser": "^5.10.2",
-    "chai": "4.3.4",
+    "chai": "4.3.6",
     "compile-code-loader": "^1.0.0",
     "electron": "16.0.8",
     "eslint": "8.8.0",
@@ -48,10 +45,9 @@
     "karma-sinon-chai": "2.0.2",
     "karma-sourcemap-loader": "0.3.8",
     "karma-webpack": "5.0.0",
-    "mocha": "3.2.0",
-    "sinon": "11.1.1",
+    "mocha": "9.2.0",
+    "sinon": "13.0.1",
     "sinon-chai": "^3.7.0",
-    "surge": "^0.19.0",
     "ts-loader": "^9.2.6",
     "typescript": "^4.5.5",
     "webpack": "5.67.0",
