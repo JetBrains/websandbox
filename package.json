@@ -39,7 +39,7 @@
     "electron": "16.0.8",
     "eslint": "8.8.0",
     "html-webpack-plugin": "5.5.0",
-    "karma": "6.3.4",
+    "karma": "6.3.13",
     "karma-chai": "0.1.0",
     "karma-chrome-launcher": "3.1.0",
     "karma-electron-launcher": "0.3.0",

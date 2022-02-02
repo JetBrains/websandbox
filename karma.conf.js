@@ -2,7 +2,7 @@
 
 function getWebpackConfig() {
     // eslint-disable-next-line @typescript-eslint/no-var-requires
-    var config = require('./webpack.config');
+    var config = require('./webpack.config')();
     config.plugins = [];
     config.devtool = 'inline-source-map';
     return config;
