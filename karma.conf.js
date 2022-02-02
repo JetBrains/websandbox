@@ -33,13 +33,13 @@ module.exports = function (config) {
         autoWatch: true,
 
         customLaunchers: {
-            Chrome_travis_ci: {
-                base: 'Chrome',
+            ChromeHeadlessNoSandbox: {
+                base: 'ChromeHeadless',
                 flags: ['--no-sandbox']
             }
         },
 
-        browsers: process.env.TRAVIS ? ['Chrome_travis_ci'] : ['Electron'],
+        browsers: ['ChromeHeadlessNoSandbox'],
 
         electronOpts: {
             show: false,
