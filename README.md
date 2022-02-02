@@ -1,9 +1,9 @@
-# Websandbox [![Build Status](https://github.com/andrey-skl/websandbox/actions/workflows/github-actions.yml/badge.svg)](https://github.com/andrey-skl/websandbox/actions/workflows/github-actions.yml)
+# Websandbox [![Build Status](https://github.com/jetbrains/websandbox/actions/workflows/github-actions.yml/badge.svg)](https://github.com/jetbrains/websandbox/actions/workflows/github-actions.yml)
 
 Websandbox library provides a way to execute unsafe js code inside HTML5 sandbox - iframe with sandbox attribute.
 It is usable to host user provided widgets and similar cases.
 
-Working example: [http://andrey-skl.github.io/websandbox](http://andrey-skl.github.io/websandbox).
+Working example: [http://jetbrains.github.io/websandbox](http://jetbrains.github.io/websandbox).
 
 ## Simple usage (see [examples folder](examples) to more information): 
 

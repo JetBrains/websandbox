@@ -1,5 +1,5 @@
 {
-  "name": "websandbox",
+  "name": "@jetbrains/websandbox",
   "version": "1.0.0-beta.1",
   "description": "A sandbox library for runnung javascript inside HTML5 sandboxed iframe",
   "main": "dist/websandbox.js",
@@ -28,7 +28,7 @@
   ],
   "types": "index.d.ts",
   "author": "Andrey Skladchikov",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.10.2",
     "@typescript-eslint/parser": "^5.10.2",
