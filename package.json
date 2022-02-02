@@ -4,8 +4,9 @@
   "description": "A sandbox library for runnung javascript inside HTML5 sandboxed iframe",
   "main": "dist/websandbox.js",
   "scripts": {
-    "build": "rm -rf dist && webpack --bail --mode production --devtool source-map",
+    "build": "rm -rf dist && webpack --bail --mode production --devtool source-map && npm run generate-declarations",
     "prepublish": "npm run build",
+    "generate-declarations": "tsc --declaration --emitDeclarationOnly --declarationDir dist",
     "lint": "eslint lib test",
     "test": "karma start",
     "build-examples": "webpack --bail --config webpack-examples.config.js  --devtool source-map",
