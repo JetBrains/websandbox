@@ -1,5 +1,5 @@
 
-name: GitHub Actions
+name: Build
 on: [push]
 jobs:
   build:
