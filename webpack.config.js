@@ -1,4 +1,5 @@
 /* eslint-env node */
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const path = require('path');
 
 module.exports = () => {
@@ -28,11 +29,6 @@ module.exports = () => {
           ],
           loader: 'ts-loader',
           options: {}
-        },
-        {
-          test: /\.html$/,
-          include: [path.resolve('./', 'lib')],
-          use: ['html-loader?interpolate']
         }
       ]
     }
