@@ -1,6 +1,6 @@
 {
   "name": "@jetbrains/websandbox",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A sandbox library for runnung javascript inside HTML5 sandboxed iframe",
   "main": "dist/websandbox.js",
   "scripts": {
