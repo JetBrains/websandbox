@@ -54,7 +54,8 @@ class Frame {
 
 const Websandbox = new Frame();
 
-// @ts-expect-error exporting library to global namespace
-window.Websandbox = window.Websandbox || Websandbox;
+// @ts-expect-error we explicitly export library to global namespace because
+// Webpack won't do it for us when this file is loaded via code-loader
+window.Websandbox = Websandbox;
 
-module.exports = Websandbox; // eslint-disable-line
+export default Websandbox;

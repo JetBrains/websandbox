@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import Sandbox from '../../lib/websandbox';
 
 var localApi = {

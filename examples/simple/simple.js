@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import Sandbox from '../../lib/websandbox';
 
 var localApi = {
@@ -6,7 +7,6 @@ var localApi = {
     }
 };
 
-console.log('>>>');
 const sandbox = Sandbox.create(localApi, {frameContainer: '.iframe__container', frameClassName: 'simple__iframe'});
 sandbox.promise
     .then(() => {
