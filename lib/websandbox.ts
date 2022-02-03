@@ -71,6 +71,7 @@ class Websandbox {
    * @param options
    */
   constructor(localApi: API, options: SandboxOptions) {
+    this.validateOptions(options);
     this.options = options;
     this.iframe = this.createIframe();
 
@@ -98,6 +99,16 @@ class Websandbox {
         }
       });
     });
+  }
+
+  validateOptions(options: SandboxOptions) {
+    if (options.frameSrc && (options.frameContent || options.initialStyles || options.baseUrl || options.codeToRunBeforeInit)) {
+      throw new Error('You can not set both "frameSrc" and any of frameContent,initialStyles,baseUrl,codeToRunBeforeInit options');
+    }
+
+    if (this.options.frameContent && this.options.frameContent.indexOf('<head>') < 0) {
+      throw new Error('Websandbox: iFrame content must have "<head>" tag.');
+    }
   }
 
   _prepareFrameContent(options: SandboxOptions) {
@@ -143,10 +154,6 @@ class Websandbox {
       frame.src = this.options.frameSrc;
       container.appendChild(frame);
       return frame;
-    }
-
-    if (this.options.frameContent && this.options.frameContent.indexOf('<head>') < 0) {
-      throw new Error('Websandbox: iFrame content must have "<head>" tag.');
     }
 
     frame.setAttribute('srcdoc', this._prepareFrameContent(this.options));
