@@ -106,7 +106,7 @@ class Websandbox {
       throw new Error('You can not set both "frameSrc" and any of frameContent,initialStyles,baseUrl,codeToRunBeforeInit options');
     }
 
-    if (this.options.frameContent && this.options.frameContent.indexOf('<head>') < 0) {
+    if (!options.frameContent?.includes('<head>')) {
       throw new Error('Websandbox: iFrame content must have "<head>" tag.');
     }
   }
