@@ -113,7 +113,7 @@ class Websandbox {
 
   _prepareFrameContent(options: SandboxOptions) {
     let frameContent = options.frameContent
-      ?.replace('</head>', `<script>${CompiledFrameScript}</script>\n</head>`) ?? '';
+      ?.replace('<head>', `<head>\n<script>${CompiledFrameScript}</script>`) ?? '';
 
     if (options.initialStyles) {
       frameContent = frameContent
@@ -127,7 +127,7 @@ class Websandbox {
 
     if (options.codeToRunBeforeInit) {
       frameContent = frameContent
-        .replace('<head>', `<head>\n<script>${options.codeToRunBeforeInit}</script>`);
+        .replace('</head>', `<script>${options.codeToRunBeforeInit}</script>\n</head>`);
     }
     return frameContent;
   }
