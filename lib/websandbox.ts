@@ -61,8 +61,8 @@ class Websandbox {
    * @param localApi Api of this side. Will be available for sandboxed code as remoteApi
    * @param options Options of created sandbox
    */
-  static create(localApi: API, options = {}) {
-    return new Websandbox(localApi, Object.assign(BaseOptions, options));
+  static create(localApi: API, options: Partial<SandboxOptions> = {}) {
+    return new Websandbox(localApi, options);
   }
 
   /**
@@ -70,9 +70,9 @@ class Websandbox {
    * @param localApi
    * @param options
    */
-  constructor(localApi: API, options: SandboxOptions) {
+  constructor(localApi: API, options: Partial<SandboxOptions>) {
     this.validateOptions(options);
-    this.options = options;
+    this.options = {...BaseOptions, ...options};
     this.iframe = this.createIframe();
 
     this.promise = new Promise(resolve => {
@@ -101,12 +101,12 @@ class Websandbox {
     });
   }
 
-  validateOptions(options: SandboxOptions) {
+  validateOptions(options: Partial<SandboxOptions>) {
     if (options.frameSrc && (options.frameContent || options.initialStyles || options.baseUrl || options.codeToRunBeforeInit)) {
       throw new Error('You can not set both "frameSrc" and any of frameContent,initialStyles,baseUrl,codeToRunBeforeInit options');
     }
 
-    if (!options.frameContent?.includes('<head>')) {
+    if ('frameContent' in options && !options.frameContent?.includes('<head>')) {
       throw new Error('Websandbox: iFrame content must have "<head>" tag.');
     }
   }
