@@ -17,6 +17,9 @@ module.exports = () => {
       library: 'Websandbox',
       filename: '[name].js'
     },
+    optimization: {
+      minimize: false // We don't want to minify distributed code, only join everything together
+    },
     resolve: {
       extensions: ['.ts', '.js'],
     },
