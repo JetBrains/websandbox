@@ -9,7 +9,7 @@ export interface SandboxOptions {
   // A class that <iframe/> element will has
   frameClassName?: string;
   /*
-  A url of iframe content. 
+  A url of iframe content.
   If set, "frameContent", "codeToRunBeforeInit", "initialStyles", "baseUrl" won't take any effect.
   In order to work properly, html file by frameSrc should have ./frame.js code bundled
   */
@@ -27,7 +27,9 @@ export interface SandboxOptions {
   // Is iFrame allowed to go fullscreen. See https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe
   allowFullScreen?: boolean,
   // Additional attributes to add into sandboxed iFrame
-  sandboxAdditionalAttributes?: string
+  sandboxAdditionalAttributes?: string,
+  // Additional attributes to add into sandboxed iFrame
+  allowAdditionalAttributes?: string
 }
 
 export const BaseOptions: SandboxOptions = {
@@ -55,7 +57,7 @@ class Websandbox {
   promise: Promise<unknown>;
   connection: Connection | null = null;
   removeMessageListener: () => void = () => {};
-  
+
   /**
    * Creates sandbox instancea
    * @param localApi Api of this side. Will be available for sandboxed code as remoteApi
@@ -145,6 +147,7 @@ class Websandbox {
     const frame = document.createElement('iframe');
     // @ts-expect-error typings error
     frame.sandbox = `allow-scripts ${this.options.sandboxAdditionalAttributes}`;
+    frame.allow = `${this.options.allowAdditionalAttributes}`;
     frame.className = this.options.frameClassName ?? '';
     if (this.options.allowFullScreen) {
       frame.allowFullscreen = true;
