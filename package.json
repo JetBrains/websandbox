@@ -34,7 +34,7 @@
     "@typescript-eslint/parser": "^5.10.2",
     "chai": "4.3.6",
     "compile-code-loader": "^1.0.0",
-    "electron": "17.0.0",
+    "electron": "18.3.7",
     "eslint": "8.8.0",
     "gh-pages": "^3.2.3",
     "html-webpack-plugin": "5.5.0",
