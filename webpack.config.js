@@ -5,7 +5,7 @@ const path = require('path');
 module.exports = () => {
   return {
     mode: 'development',
-    devtool: 'none',
+    devtool: false,
     target: 'web',
     entry: {
       websandbox: './lib/websandbox',
