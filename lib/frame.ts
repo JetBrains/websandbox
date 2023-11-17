@@ -56,6 +56,6 @@ const Websandbox = new Frame();
 
 // @ts-expect-error we explicitly export library to global namespace because
 // Webpack won't do it for us when this file is loaded via code-loader
-window.Websandbox = Websandbox;
+window.Websandbox = window.Websandbox || Websandbox;
 
 export default Websandbox;
