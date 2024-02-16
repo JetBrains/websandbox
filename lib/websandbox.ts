@@ -118,7 +118,7 @@ class Websandbox {
 
     if (options.codeToRunBeforeInit) {
       frameContent = frameContent
-        .replace('</head>', `<script>${options.codeToRunBeforeInit}</script>\n</head>`);
+        .replace('<head>', `<head>\n<script>${options.codeToRunBeforeInit}</script>`) ?? '';
     }
 
     frameContent = frameContent
