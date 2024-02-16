@@ -114,8 +114,15 @@ class Websandbox {
   }
 
   _prepareFrameContent(options: SandboxOptions) {
-    let frameContent = options.frameContent
-      ?.replace('<head>', `<head>\n<script>${CompiledFrameScript}</script>`) ?? '';
+    let frameContent = options.frameContent ?? '';
+
+    if (options.codeToRunBeforeInit) {
+      frameContent = frameContent
+        .replace('</head>', `<script>${options.codeToRunBeforeInit}</script>\n</head>`);
+    }
+
+    frameContent = frameContent
+      .replace('<head>', `<head>\n<script>${CompiledFrameScript}</script>`) ?? '';
 
     if (options.initialStyles) {
       frameContent = frameContent
@@ -127,10 +134,6 @@ class Websandbox {
         .replace('<head>', `<head>\n<base href="${options.baseUrl}"/>`);
     }
 
-    if (options.codeToRunBeforeInit) {
-      frameContent = frameContent
-        .replace('</head>', `<script>${options.codeToRunBeforeInit}</script>\n</head>`);
-    }
     return frameContent;
   }
 
