@@ -37,7 +37,7 @@ describe('Sandbox', function () {
 
     it('should add base tag if baseUrl provided', function () {
         Sandbox.create({}, {baseUrl: 'http://example.com'});
-        document.querySelector('iframe').srcdoc.should.contain(`<base href="http://example.com"/>`);
+        document.querySelector('iframe').srcdoc.should.contain(`<base target="_parent" href="http://example.com"/>`);
     });
 
     it('should add only "allow-scripts" sandbox attribute by default', function () {
