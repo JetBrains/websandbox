@@ -131,7 +131,7 @@ class Websandbox {
 
     if (options.baseUrl) {
       frameContent = frameContent
-        .replace('<head>', `<head>\n<base href="${options.baseUrl}"/>`);
+        .replace('<head>', `<head>\n<base target="_parent" href="${options.baseUrl}"/>`);
     }
 
     return frameContent;
