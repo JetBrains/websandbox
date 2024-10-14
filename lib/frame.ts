@@ -7,7 +7,13 @@ class Frame {
     this.connection = new Connection(
       window.parent.postMessage.bind(window.parent),
       listener => {
-        window.addEventListener('message', listener);
+        const sourceCheckListener = (event: MessageEvent) => {
+          if (event.source !== window.parent) {
+            return;
+          }
+          return listener(event);
+        };
+        window.addEventListener('message', sourceCheckListener);
       }
     );
 
