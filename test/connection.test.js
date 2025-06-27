@@ -2,15 +2,19 @@ import Connection, {TYPE_MESSAGE, TYPE_RESPONSE} from '../lib/connection';
 
 describe('Connection', function () {
     const CALL_ID = 'fake-call-id';
+    let callMessageListener = null;
 
     beforeEach(function () {
         this.localApi = sinon.stub({
             testLocalMethod: () => {
-            }
+            },
+            nested: sinon.stub({
+                method: () => {}
+            })
         });
 
         this.registerOnMessageListener = (listener) => {
-            this.callMessageListener = listener;
+            callMessageListener = listener;
         };
         this.postMessage = sinon.stub();
     });
@@ -32,7 +36,7 @@ describe('Connection', function () {
 
 
         //Emulate response
-        this.callMessageListener({
+        callMessageListener({
             data: {
                 callId: this.postMessage.getCall(0).args[0].callId,
                 type: TYPE_RESPONSE,
@@ -40,6 +44,33 @@ describe('Connection', function () {
                 result: {foo: 'bar'}
             }
         });
+    });
+
+    it('should accept nested.methods', function () {
+        const conn = new Connection(this.postMessage, this.registerOnMessageListener);
+
+        conn.postMessageToOtherSide = sinon.stub();
+
+        conn.setLocalApi({nested: {method: () => {}}});
+
+        conn.postMessageToOtherSide.should.have.been.calledWithMatch({apiMethods: ['nested.method']});
+    });
+
+    it('should accept nested methods in setInterface', function () {
+        const conn = new Connection(this.postMessage, this.registerOnMessageListener);
+        
+        conn.setInterface(['flat', 'nested.method']);
+        conn.remote.flat.should.be.a('function');
+        conn.remote.nested.method.should.be.a('function');
+    });
+
+    it('should call nested.methods', function () {
+        const conn = new Connection(this.postMessage, this.registerOnMessageListener);
+
+        conn.postMessageToOtherSide = sinon.stub();
+        conn.setLocalApi(this.localApi);
+
+        conn.postMessageToOtherSide.should.have.been.calledWithMatch({apiMethods: ['testLocalMethod', 'nested.method']});
     });
 
     it('should handle failure of remote method', function (done) {
@@ -54,7 +85,7 @@ describe('Connection', function () {
 
 
         //Emulate response
-        this.callMessageListener({
+        callMessageListener({
             data: {
                 callId: this.postMessage.getCall(0).args[0].callId,
                 type: TYPE_RESPONSE,
@@ -72,7 +103,7 @@ describe('Connection', function () {
         conn.setLocalApi(this.localApi)
             .then(() => {
 
-                this.callMessageListener({
+                callMessageListener({
                     data: {
                         callId: CALL_ID,
                         type: TYPE_MESSAGE,
@@ -84,6 +115,9 @@ describe('Connection', function () {
             .then(() => {
                 conn.localApi.testLocalMethod.should.have.been.calledWith({foo: 'bar'}, 123);
                 done();
+            })
+            .catch(err => {
+                done(err);
             });
 
 
@@ -97,7 +131,7 @@ describe('Connection', function () {
 
         conn.setLocalApi(this.localApi)
             .then(() => {
-                this.callMessageListener({
+                callMessageListener({
                     data: {
                         callId: CALL_ID,
                         type: TYPE_MESSAGE,
@@ -116,6 +150,43 @@ describe('Connection', function () {
                     }, '*');
                     done();
                 }, 10);
+            })
+            .catch(err => {
+                done(err);
+            });
+    });
+
+
+    it('should response to remote call of nested method', function (done) {
+        const conn = new Connection(this.postMessage, this.registerOnMessageListener);
+        sinon.stub(conn, 'registerCallback').callsFake((resolve) => resolve());
+
+        this.localApi.nested.method.returns({fake: TYPE_RESPONSE});
+
+        conn.setLocalApi(this.localApi)
+            .then(() => {
+                callMessageListener({
+                    data: {
+                        callId: CALL_ID,
+                        type: TYPE_MESSAGE,
+                        methodName: 'nested.method',
+                        arguments: []
+                    }
+                });
+            })
+            .then(() => {
+                setTimeout(() => {
+                    this.postMessage.should.have.been.calledWith({
+                        callId: "fake-call-id",
+                        result: {fake: TYPE_RESPONSE},
+                        success: true,
+                        type: "response"
+                    }, '*');
+                    done();
+                }, 10);
+            })
+            .catch(err => {
+                done(err);
             });
     });
 
@@ -130,6 +201,9 @@ describe('Connection', function () {
             .then(() => conn.setInterface(['testMethod']))
             .then(() => new Promise(resolve => setTimeout(resolve)))
             .then(() => resolved.should.have.been.called)
-            .then(() => done());
+            .then(() => done())
+            .catch(err => {
+                done(err);
+            });
     });
 });
