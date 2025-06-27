@@ -156,10 +156,11 @@ class Connection {
      * @returns {Promise.<*>}
      */
   callLocalServiceMethod(methodName: string, args: any[]) {
-    if (!propertyByPath(this.serviceMethods, methodName)) {
+      const method = propertyByPath<Function>(this.serviceMethods, methodName);
+    if (!method) {
       throw new Error(`Service method ${methodName} is not registered`);
     }
-    return Promise.resolve((propertyByPath(this.serviceMethods, methodName) as Function)(...args));
+    return Promise.resolve(method.call(this, ...args));
   }
 
   /**
