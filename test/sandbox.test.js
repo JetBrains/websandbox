@@ -77,8 +77,21 @@ describe('Sandbox', function () {
             .then(() => {
                 localApi.methodToCall.should.have.been.calledWith('some argument', 123);
                 done();
-            });
+            })
+            .catch(done);
+    });
 
+    it('should create sandbox and call nested local api back', async function () {
+        var localApi = {
+            nested: {
+                methodToCall: sinon.spy()
+            }
+        };
+
+        const sandbox = Sandbox.create(localApi);
+        const remote = await sandbox.promise;
+        await remote.run(`Websandbox.connection.remote.nested.methodToCall("some argument", 123);`);
+        localApi.nested.methodToCall.should.have.been.calledWith('some argument', 123);
     });
 
     it('should not pass messages to neighbour sandboxes because their event.souce should not be the same', function () {
@@ -120,7 +133,8 @@ describe('Sandbox', function () {
             .then(() => {
                 localApi.methodToCall.should.have.been.calledWith('some argument', 123);
                 done();
-            });
+            })
+            .catch(done);
 
     });
 
@@ -140,7 +154,8 @@ describe('Sandbox', function () {
             .then(() => {
                 localApi.confirmDynamicMethodCall.should.have.been.calledWith('some message');
                 done();
-            });
+            })
+            .catch(done);
 
     });
 
@@ -158,6 +173,7 @@ describe('Sandbox', function () {
             .catch((err) => {
                 err.message.should.equal('fake error');
                 done();
-            });
+            })
+            .catch(done);
     });
 });

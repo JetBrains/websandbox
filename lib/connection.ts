@@ -1,3 +1,4 @@
+import { propertyByPath, splitPath } from "./object-path";
 import type {API} from "./types";
 
 export const TYPE_MESSAGE = 'message';
@@ -85,14 +86,38 @@ class Connection {
      * Sets remote interface methods
      * @param remote - hash with keys of remote API methods. Values is ignored
      */
-  setInterface(remoteMethods: API) {
+  setInterface(remoteMethods: string[]) {
     this.remote = {};
 
     remoteMethods.forEach(
-      (key: string) => this.remote[key] = this.createMethodWrapper(key)
+      (key: string) => {
+        // If key is nested, we need to create nested structure
+        const parts = splitPath(key);
+        let current = this.remote;
+        for (let i = 0; i < parts.length - 1; i++)
+        {
+          const part = parts[i];
+          if (!current[part] || typeof current[part] !== 'object') {
+            current[part] = {};
+          }
+          current = current[part] as API;
+        }
+        current[parts[parts.length - 1]] = this.createMethodWrapper(key);
+      }
     );
 
     this._resolveRemoteMethodsPromise?.();
+  }
+
+  private getMethodsFromInterface(api: API) {
+    return Object.keys(api).reduce((acc, key) => {
+      if (typeof api[key] === 'object') {
+        acc.push(...this.getMethodsFromInterface(api[key] as API).map(subKey => `${key}.${subKey}`));
+      } else {
+        acc.push(key);
+      }
+      return acc;
+    }, [] as string[]);
   }
 
   setLocalApi(api: API) {
@@ -100,7 +125,7 @@ class Connection {
       const id = this.registerCallback(resolve, reject);
       this.postMessageToOtherSide({
         callId: id,
-        apiMethods: Object.keys(api),
+        apiMethods: this.getMethodsFromInterface(api),
         type: TYPE_SET_INTERFACE
       });
     }).then(() => this.localApi = api);
@@ -117,7 +142,11 @@ class Connection {
      * @returns {Promise.<*>|string}
      */
   callLocalApi(methodName: string, args: any[]) {
-    return Promise.resolve(this.localApi[methodName](...args));
+    const method = propertyByPath<Function>(this.localApi, methodName);
+    if (!method) {
+      throw new Error(`Local method "${methodName}" is not registered`);
+    }
+    return Promise.resolve(method.call(this, ...args));
   }
 
   /**
@@ -127,10 +156,10 @@ class Connection {
      * @returns {Promise.<*>}
      */
   callLocalServiceMethod(methodName: string, args: any[]) {
-    if (!this.serviceMethods[methodName]) {
-      throw new Error(`Serivce method ${methodName} is not registered`);
+    if (!propertyByPath(this.serviceMethods, methodName)) {
+      throw new Error(`Service method ${methodName} is not registered`);
     }
-    return Promise.resolve(this.serviceMethods[methodName](...args));
+    return Promise.resolve((propertyByPath(this.serviceMethods, methodName) as Function)(...args));
   }
 
   /**

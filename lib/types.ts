@@ -1,3 +1,3 @@
 export type API = {
-  [key: string]: Function;
+  [key: string]: Function | API;
 };
