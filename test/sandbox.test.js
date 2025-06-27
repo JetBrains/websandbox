@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-expressions */
 import Sandbox from '../lib/websandbox';
 import Connection from '../lib/connection';
 
