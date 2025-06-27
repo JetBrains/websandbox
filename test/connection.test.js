@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-expressions */
 import Connection, {TYPE_MESSAGE, TYPE_RESPONSE} from '../lib/connection';
 
 describe('Connection', function () {
