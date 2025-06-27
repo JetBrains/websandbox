@@ -148,6 +148,7 @@ class Websandbox {
     }
 
     const frame = document.createElement('iframe');
+    // @ts-expect-error typings error
     frame.sandbox = `allow-scripts ${this.options.sandboxAdditionalAttributes}`;
     frame.allow = `${this.options.allowAdditionalAttributes}`;
     frame.className = this.options.frameClassName ?? '';
