@@ -1,5 +1,4 @@
 /******/ (() => { // webpackBootstrap
-var __webpack_exports__ = {};
 /*!*************************************************!*\
   !*** ./examples/importScript/scriptToImport.js ***!
   \*************************************************/
