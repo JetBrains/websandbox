@@ -32,6 +32,7 @@
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^8.35.0",
     "@typescript-eslint/parser": "^8.35.0",
+    "ajv": "^7.2.4",
     "chai": "4.3.10",
     "compile-code-loader": "^1.0.0",
     "electron": "37.1.0",
@@ -56,6 +57,5 @@
     "webpack": "5.99.9",
     "webpack-cli": "^6.0.1",
     "webpack-dev-server": "5.2.2"
-  },
-  "dependencies": {}
+  }
 }
