@@ -24,16 +24,11 @@ describe('Connection', function () {
         conn.should.not.be.undefined;
     });
 
-    it('should call remote and wait for response', function (done) {
+    it('should call remote and wait for response', async function () {
         let conn = new Connection(this.postMessage, this.registerOnMessageListener);
         conn.setInterface(['testMethod']);
 
-        conn.remote.testMethod('test', 123)
-            .then(res => {
-                res.should.eql({foo: 'bar'});
-                done();
-            });
-
+        const responsePromise = conn.remote.testMethod('test', 123);
 
         //Emulate response
         callMessageListener({
@@ -44,6 +39,9 @@ describe('Connection', function () {
                 result: {foo: 'bar'}
             }
         });
+
+        const res = await responsePromise;
+        res.should.eql({foo: 'bar'});
     });
 
     it('should accept nested.methods', function () {
@@ -73,16 +71,11 @@ describe('Connection', function () {
         conn.postMessageToOtherSide.should.have.been.calledWithMatch({apiMethods: ['testLocalMethod', 'nested.method']});
     });
 
-    it('should handle failure of remote method', function (done) {
+    it('should handle failure of remote method', async function () {
         let conn = new Connection(this.postMessage, this.registerOnMessageListener);
         conn.setInterface(['testMethod']);
 
-        conn.remote.testMethod('test', 123)
-            .catch(err => {
-                err.should.eql({message: 'bar'});
-                done();
-            });
-
+        const responsePromise = conn.remote.testMethod('test', 123);
 
         //Emulate response
         callMessageListener({
@@ -93,117 +86,102 @@ describe('Connection', function () {
                 result: {message: 'bar'}
             }
         });
+
+        try {
+            await responsePromise;
+            throw new Error('Expected method to throw');
+        } catch (err) {
+            err.should.eql({message: 'bar'});
+        }
     });
 
-    it('should call local API on remote call', function (done) {
+    it('should call local API on remote call', async function () {
         //First notify connection that localApi was registered on other side
         const conn = new Connection(this.postMessage, this.registerOnMessageListener);
         sinon.stub(conn, 'registerCallback').callsFake((resolve) => resolve());
 
-        conn.setLocalApi(this.localApi)
-            .then(() => {
+        await conn.setLocalApi(this.localApi);
 
-                callMessageListener({
-                    data: {
-                        callId: CALL_ID,
-                        type: TYPE_MESSAGE,
-                        methodName: 'testLocalMethod',
-                        arguments: [{foo: 'bar'}, 123]
-                    }
-                });
-            })
-            .then(() => {
-                conn.localApi.testLocalMethod.should.have.been.calledWith({foo: 'bar'}, 123);
-                done();
-            })
-            .catch(err => {
-                done(err);
-            });
+        callMessageListener({
+            data: {
+                callId: CALL_ID,
+                type: TYPE_MESSAGE,
+                methodName: 'testLocalMethod',
+                arguments: [{foo: 'bar'}, 123]
+            }
+        });
 
-
+        conn.localApi.testLocalMethod.should.have.been.calledWith({foo: 'bar'}, 123);
     });
 
-    it('should response to remote call', function (done) {
+    it('should response to remote call', async function () {
         const conn = new Connection(this.postMessage, this.registerOnMessageListener);
         sinon.stub(conn, 'registerCallback').callsFake((resolve) => resolve());
 
         this.localApi.testLocalMethod.returns({fake: TYPE_RESPONSE});
 
-        conn.setLocalApi(this.localApi)
-            .then(() => {
-                callMessageListener({
-                    data: {
-                        callId: CALL_ID,
-                        type: TYPE_MESSAGE,
-                        methodName: 'testLocalMethod',
-                        arguments: []
-                    }
-                });
-            })
-            .then(() => {
-                setTimeout(() => {
-                    this.postMessage.should.have.been.calledWith({
-                        callId: "fake-call-id",
-                        result: {fake: TYPE_RESPONSE},
-                        success: true,
-                        type: "response"
-                    }, '*');
-                    done();
-                }, 10);
-            })
-            .catch(err => {
-                done(err);
-            });
+        await conn.setLocalApi(this.localApi);
+        
+        callMessageListener({
+            data: {
+                callId: CALL_ID,
+                type: TYPE_MESSAGE,
+                methodName: 'testLocalMethod',
+                arguments: []
+            }
+        });
+
+        // Wait for the asynchronous message handling
+        await new Promise(resolve => setTimeout(resolve, 10));
+        
+        this.postMessage.should.have.been.calledWith({
+            callId: "fake-call-id",
+            result: {fake: TYPE_RESPONSE},
+            success: true,
+            type: "response"
+        }, '*');
     });
 
 
-    it('should response to remote call of nested method', function (done) {
+    it('should response to remote call of nested method', async function () {
         const conn = new Connection(this.postMessage, this.registerOnMessageListener);
         sinon.stub(conn, 'registerCallback').callsFake((resolve) => resolve());
 
         this.localApi.nested.method.returns({fake: TYPE_RESPONSE});
 
-        conn.setLocalApi(this.localApi)
-            .then(() => {
-                callMessageListener({
-                    data: {
-                        callId: CALL_ID,
-                        type: TYPE_MESSAGE,
-                        methodName: 'nested.method',
-                        arguments: []
-                    }
-                });
-            })
-            .then(() => {
-                setTimeout(() => {
-                    this.postMessage.should.have.been.calledWith({
-                        callId: "fake-call-id",
-                        result: {fake: TYPE_RESPONSE},
-                        success: true,
-                        type: "response"
-                    }, '*');
-                    done();
-                }, 10);
-            })
-            .catch(err => {
-                done(err);
-            });
+        await conn.setLocalApi(this.localApi);
+        
+        callMessageListener({
+            data: {
+                callId: CALL_ID,
+                type: TYPE_MESSAGE,
+                methodName: 'nested.method',
+                arguments: []
+            }
+        });
+
+        // Wait for the asynchronous message handling
+        await new Promise(resolve => setTimeout(resolve, 10));
+        
+        this.postMessage.should.have.been.calledWith({
+            callId: "fake-call-id",
+            result: {fake: TYPE_RESPONSE},
+            success: true,
+            type: "response"
+        }, '*');
     });
 
-    it('should resolve remote methods wait promise', function (done) {
+    it('should resolve remote methods wait promise', async function () {
         const resolved = sinon.spy();
         const conn = new Connection(this.postMessage, this.registerOnMessageListener);
         
         Promise.resolve(conn.remoteMethodsWaitPromise).then(resolved);
 
-        new Promise(resolve => setTimeout(resolve))
-            .then(() => resolved.should.not.have.been.called)
-            .then(() => conn.setInterface(['testMethod']))
-            .then(() => new Promise(resolve => setTimeout(resolve)))
-            .then(() => resolved.should.have.been.called)
-            .then(() => done())
-            .catch(err => {
-                done(err);
-            });
+        await new Promise(resolve => setTimeout(resolve));
+        resolved.should.not.have.been.called;
+        
+        conn.setInterface(['testMethod']);
+        await new Promise(resolve => setTimeout(resolve));
+        resolved.should.have.been.called;
     });
 });
