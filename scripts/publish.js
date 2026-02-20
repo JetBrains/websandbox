@@ -19,7 +19,8 @@ console.log('publishing...');
 ghpages.publish('dist-examples', options, function(err) {
   if (err) {
     console.error('failed to publish', err);
+    process.exit(1);
   } else {
-    console.info('published', err);
+    console.info('published');
   }
 });
