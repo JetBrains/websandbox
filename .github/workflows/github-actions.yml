@@ -15,3 +15,5 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
       - run: npm run deploy-examples
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
