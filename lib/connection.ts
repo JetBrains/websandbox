@@ -262,10 +262,14 @@ class Connection {
      * @param result - result of remote call
      */
   popCallback(id: string, success: boolean, result: any) {
+    const callback = this.callbacks[id];
+    if (!callback) {
+      return;
+    }
     if (success) {
-      this.callbacks[id].successCallback(result);
+      callback.successCallback(result);
     } else {
-      this.callbacks[id].failureCallback(result);
+      callback.failureCallback(result);
     }
     delete this.callbacks[id];
   }
