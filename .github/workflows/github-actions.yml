@@ -11,4 +11,7 @@ jobs:
           node-version: 22
       - run: npm install
       - run: npm test
+      - run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
       - run: npm run deploy-examples
