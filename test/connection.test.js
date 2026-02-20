@@ -21,12 +21,12 @@ describe('Connection', function () {
     });
 
     it('should init onnection', function () {
-        let conn = new Connection(this.postMessage, this.registerOnMessageListener);
+        const conn = new Connection(this.postMessage, this.registerOnMessageListener);
         conn.should.not.be.undefined;
     });
 
     it('should call remote and wait for response', async function () {
-        let conn = new Connection(this.postMessage, this.registerOnMessageListener);
+        const conn = new Connection(this.postMessage, this.registerOnMessageListener);
         conn.setInterface(['testMethod']);
 
         const responsePromise = conn.remote.testMethod('test', 123);
@@ -73,7 +73,7 @@ describe('Connection', function () {
     });
 
     it('should handle failure of remote method', async function () {
-        let conn = new Connection(this.postMessage, this.registerOnMessageListener);
+        const conn = new Connection(this.postMessage, this.registerOnMessageListener);
         conn.setInterface(['testMethod']);
 
         const responsePromise = conn.remote.testMethod('test', 123);

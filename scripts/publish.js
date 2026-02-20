@@ -3,12 +3,24 @@
 // eslint-disable-next-line no-undef
 const ghpages = require('gh-pages');
 
+const options = {branch: 'gh-pages'};
+
+// Use token-authenticated URL in CI
+// eslint-disable-next-line no-undef
+if (process.env.GITHUB_TOKEN) {
+  // eslint-disable-next-line no-undef
+  const repo = process.env.GITHUB_REPOSITORY || 'JetBrains/websandbox';
+  // eslint-disable-next-line no-undef
+  options.repo = `https://git:${process.env.GITHUB_TOKEN}@github.com/${repo}.git`;
+}
+
 console.log('publishing...');
 
-ghpages.publish('dist-examples', {branch: 'gh-pages'}, function(err) {
+ghpages.publish('dist-examples', options, function(err) {
   if (err) {
     console.error('failed to publish', err);
+    process.exit(1);
   } else {
-    console.info('published', err);
+    console.info('published');
   }
 });
