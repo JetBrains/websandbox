@@ -4,12 +4,12 @@ import Connection from '../lib/connection';
 
 describe('Sandbox', function () {
     afterEach(() => {
-        let frames = document.querySelectorAll('iframe');
+        const frames = document.querySelectorAll('iframe');
         Array.prototype.forEach.call(frames, (frame) => frame.remove());
     });
 
     it('should init', function () {
-        var sand = Sandbox.create({});
+        const sand = Sandbox.create({});
         sand.should.not.be.undefined;
     });
 
@@ -66,7 +66,7 @@ describe('Sandbox', function () {
     });
 
     it('should create sandbox and call local api back', async function () {
-        var localApi = {
+        const localApi = {
             methodToCall: sinon.spy()
         };
 
@@ -77,7 +77,7 @@ describe('Sandbox', function () {
     });
 
     it('should create sandbox and call nested local api back', async function () {
-        var localApi = {
+        const localApi = {
             nested: {
                 methodToCall: sinon.spy()
             }
@@ -90,8 +90,8 @@ describe('Sandbox', function () {
     });
 
     it('should not pass messages to neighbour sandboxes because their event.souce should not be the same', async function () {
-        var localApi1 = {methodToCall: sinon.spy()};
-        var localApi2 = {methodToCall: sinon.spy()};
+        const localApi1 = {methodToCall: sinon.spy()};
+        const localApi2 = {methodToCall: sinon.spy()};
 
         const sandbox1 = Sandbox.create(localApi1);
         const sandbox2 = Sandbox.create(localApi2);
@@ -110,12 +110,12 @@ describe('Sandbox', function () {
     });
 
     it('should run function inside sandbox', async function () {
-        var localApi = {
+        const localApi = {
             methodToCall: sinon.spy()
         };
 
         function toRunInsideSandbox() {
-            Websandbox.connection.remote.methodToCall("some argument", 123); //eslint-disable-line no-undef
+            Websandbox.connection.remote.methodToCall("some argument", 123);
         }
 
         const sandbox = Sandbox.create(localApi);
@@ -125,7 +125,7 @@ describe('Sandbox', function () {
     });
 
     it('should create sandbox and call sandboxed API', async function () {
-        var localApi = {
+        const localApi = {
             confirmDynamicMethodCall: sinon.spy()
         };
 

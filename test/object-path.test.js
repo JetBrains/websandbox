@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unused-expressions */
-/* eslint-disable no-magic-numbers */
 import {escapePathPart, propertyByPath, splitPath, unescapePathPart} from '../lib/object-path';
 
 describe('object extensions', () => {
