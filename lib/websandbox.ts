@@ -1,6 +1,6 @@
 import Connection from './connection';
 // @ts-expect-error loader-based input
-import CompiledFrameScript from 'compile-code-loader!./frame.ts';
+import CompiledFrameScript from 'val-loader!./frame-bundle.js';
 import { API } from './types';
 
 export interface SandboxOptions {
@@ -36,13 +36,7 @@ export const BaseOptions: SandboxOptions = {
   frameContainer: 'body',
   frameClassName: 'websandbox__frame',
   frameSrc: null,
-  frameContent: `
-<!DOCTYPE html>
-<html>
-<head><meta charset="UTF-8"></head>
-<body></body>
-</html>
-  `,
+  frameContent: '<!DOCTYPE html><html><head><meta charset="UTF-8"></head><body></body></html>',
   codeToRunBeforeInit: null,
   initialStyles: null,
   baseUrl: null,
@@ -118,20 +112,20 @@ class Websandbox {
 
     if (options.codeToRunBeforeInit) {
       frameContent = frameContent
-        .replace('<head>', `<head>\n<script>${options.codeToRunBeforeInit}</script>`) ?? '';
+        .replace('<head>', `<head><script>${options.codeToRunBeforeInit}</script>`) ?? '';
     }
 
     frameContent = frameContent
-      .replace('<head>', `<head>\n<script>${CompiledFrameScript}</script>`) ?? '';
+      .replace('<head>', `<head><script>${CompiledFrameScript}</script>`) ?? '';
 
     if (options.initialStyles) {
       frameContent = frameContent
-        .replace('</head>', `<style>${options.initialStyles}</style>\n</head>`);
+        .replace('</head>', `<style>${options.initialStyles}</style></head>`);
     }
 
     if (options.baseUrl) {
       frameContent = frameContent
-        .replace('<head>', `<head>\n<base target="_parent" href="${options.baseUrl}"/>`);
+        .replace('<head>', `<head><base target="_parent" href="${options.baseUrl}"/>`);
     }
 
     return frameContent;
