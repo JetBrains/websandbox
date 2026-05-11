@@ -20,7 +20,7 @@ describe('Sandbox', function () {
 
     it('should create iframe with correct srcdoc', function () {
         Sandbox.create({});
-        document.querySelector('iframe').srcdoc.should.contain(`TYPE_SET_INTERFACE`);
+        document.querySelector('iframe').srcdoc.should.contain(`set-interface`);
     });
 
     it('should support passing custom frameContent', function () {
@@ -32,7 +32,7 @@ describe('Sandbox', function () {
             </html>
         `});
 
-        document.querySelector('iframe').srcdoc.should.contain(`TYPE_SET_INTERFACE`);
+        document.querySelector('iframe').srcdoc.should.contain(`set-interface`);
         document.querySelector('iframe').srcdoc.should.contain('this is custom frame content');
     });
 
