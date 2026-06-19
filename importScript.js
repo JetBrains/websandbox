@@ -25,9 +25,7 @@ const TYPE_SERVICE_MESSAGE = 'service-message';
 // @ts-expect-error this is IE11 obsolete check. It is not typed
 const isIE11 = !!window.MSInputMethodContext && !!document.documentMode;
 const defaultOptions = {
-    //Will not affect IE11 because there sandboxed iframe has not 'null' origin
-    //but base URL of iframe's src
-    allowedSenderOrigin: undefined
+    allowedSenderOrigin: 'null'
 };
 class Connection {
     constructor(postMessage, registerOnMessageListener, options = {}) {
@@ -86,8 +84,10 @@ class Connection {
         var _a;
         this.remote = {};
         remoteMethods.forEach((key) => {
-            // If key is nested, we need to create nested structure
             const parts = (0,_object_path__WEBPACK_IMPORTED_MODULE_0__.splitPath)(key);
+            if ((0,_object_path__WEBPACK_IMPORTED_MODULE_0__.hasUnsafeSegments)(parts)) {
+                return;
+            }
             let current = this.remote;
             for (let i = 0; i < parts.length - 1; i++) {
                 const part = parts[i];
@@ -267,11 +267,13 @@ class Connection {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   escapePathPart: () => (/* binding */ escapePathPart),
+/* harmony export */   hasUnsafeSegments: () => (/* binding */ hasUnsafeSegments),
 /* harmony export */   propertyByPath: () => (/* binding */ propertyByPath),
 /* harmony export */   splitPath: () => (/* binding */ splitPath),
 /* harmony export */   unescapePathPart: () => (/* binding */ unescapePathPart)
 /* harmony export */ });
 const PATH_REG = /([.[\]:;'"\s])/;
+const UNSAFE_SEGMENTS = new Set(['__proto__', 'constructor', 'prototype']);
 function escapePathPart(pathPart) {
     if (!PATH_REG.test(pathPart)) {
         return pathPart;
@@ -295,14 +297,15 @@ function splitPath(path) {
     result.push(path.substring(lastEnd, path.length));
     return result.filter(pathPart => !!pathPart).map(pathPart => pathPart.replace(/\\/g, ''));
 }
-/**
- * Extracts object property value by given path. Supports nested and array values: 'foo[0].bar'
- * @param {Object} object source object
- * @param {string} path path to value
- * @return {any | null} value by given path
- * */
+function hasUnsafeSegments(parts) {
+    return parts.some(part => UNSAFE_SEGMENTS.has(part));
+}
 function propertyByPath(object, path) {
-    return splitPath(path).reduce((acc, pathPart) => {
+    const parts = splitPath(path);
+    if (hasUnsafeSegments(parts)) {
+        return null;
+    }
+    return parts.reduce((acc, pathPart) => {
         if (acc) {
             return acc[pathPart];
         }
@@ -470,7 +473,7 @@ class Websandbox {
   \*******************************************************************/
 (module) {
 
-module.exports = "(()=>{\"use strict\";const e=/([.[\\]:;'\"\\s])/;function t(t){const s=[];let o=0;for(let r=0;r<t.length;r++){const i=t[r];e.test(i)&&\"\\\\\"!==t[r-1]&&(s.push(t.substring(o,r)),o=r+1)}return s.push(t.substring(o,t.length)),s.filter(e=>!!e).map(e=>e.replace(/\\\\/g,\"\"))}function s(e,s){return t(s).reduce((e,t)=>e?e[t]:null,e)}const o=\"message\",r=\"response\",i=\"set-interface\",n=\"service-message\",c=!!window.MSInputMethodContext&&!!document.documentMode,a={allowedSenderOrigin:void 0},l=class{constructor(e,t,s={}){this.remote={},this.serviceMethods={},this.localApi={},this.callbacks={},this._resolveRemoteMethodsPromise=null,this.options=Object.assign(Object.assign({},a),s),this.incrementalID=Math.floor(1e5*Math.random()),this.postMessage=e,this.remoteMethodsWaitPromise=new Promise(e=>{this._resolveRemoteMethodsPromise=e}),t(e=>this.onMessageListener(e))}onMessageListener(e){const t=e.data,{allowedSenderOrigin:s}=this.options;s&&e.origin!==s&&!c||(t.type===r?this.popCallback(t.callId,t.success,t.result):t.type===o?this.callLocalApi(t.methodName,t.arguments).then(e=>this.responseOtherSide(t.callId,e)).catch(e=>this.responseOtherSide(t.callId,e,!1)):t.type===i?(this.setInterface(t.apiMethods),this.responseOtherSide(t.callId)):t.type===n&&this.callLocalServiceMethod(t.methodName,t.arguments).then(e=>this.responseOtherSide(t.callId,e)).catch(e=>this.responseOtherSide(t.callId,e,!1)))}postMessageToOtherSide(e){this.postMessage(e,\"*\")}setInterface(e){var s;this.remote={},e.forEach(e=>{const s=t(e);let o=this.remote;for(let e=0;e<s.length-1;e++){const t=s[e];o[t]&&\"object\"==typeof o[t]||(o[t]={}),o=o[t]}o[s[s.length-1]]=this.createMethodWrapper(e)}),null===(s=this._resolveRemoteMethodsPromise)||void 0===s||s.call(this)}getMethodsFromInterface(e){return Object.keys(e).reduce((t,s)=>(\"object\"==typeof e[s]?t.push(...this.getMethodsFromInterface(e[s]).map(e=>`${s}.${e}`)):t.push(s),t),[])}setLocalApi(e){return new Promise((t,s)=>{const o=this.registerCallback(t,s);this.postMessageToOtherSide({callId:o,apiMethods:this.getMethodsFromInterface(e),type:i})}).then(()=>this.localApi=e)}setServiceMethods(e){this.serviceMethods=e}callLocalApi(e,t){const o=s(this.localApi,e);if(!o)throw new Error(`Local method \"${e}\" is not registered`);return Promise.resolve(o.call(this,...t))}callLocalServiceMethod(e,t){const o=s(this.serviceMethods,e);if(!o)throw new Error(`Service method ${e} is not registered`);return Promise.resolve(o.call(this,...t))}createMethodWrapper(e){return(...t)=>this.callRemoteMethod(e,...t)}callRemoteMethod(e,...t){return new Promise((s,r)=>{const i=this.registerCallback(s,r);this.postMessageToOtherSide({callId:i,methodName:e,type:o,arguments:t})})}callRemoteServiceMethod(e,...t){return new Promise((s,o)=>{const r=this.registerCallback(s,o);this.postMessageToOtherSide({callId:r,methodName:e,type:n,arguments:t})})}responseOtherSide(e,t,s=!0){t instanceof Error&&(t=[...Object.keys(t),\"message\"].reduce((e,s)=>(e[s]=t[s],e),{}));const o=()=>this.postMessage({callId:e,type:r,success:s,result:t},\"*\");try{o()}catch(e){console.error(\"Failed to post response, recovering...\",e),e instanceof DOMException&&(t=JSON.parse(JSON.stringify(t)),o())}}registerCallback(e,t){const s=(++this.incrementalID).toString();return this.callbacks[s]={successCallback:e,failureCallback:t},s}popCallback(e,t,s){const o=this.callbacks[e];o&&(t?o.successCallback(s):o.failureCallback(s),delete this.callbacks[e])}},h=window.Websandbox||new class{constructor(){this.connection=new l(window.parent.postMessage.bind(window.parent),e=>{window.addEventListener(\"message\",t=>{if(t.source===window.parent)return e(t)})}),this.connection.setServiceMethods({runCode:e=>this.runCode(e),importScript:e=>this.importScript(e),injectStyle:e=>this.injectStyle(e),importStyle:e=>this.importStyle(e)}),this.connection.callRemoteServiceMethod(\"iframeInitialized\")}runCode(e){const t=document.createElement(\"script\");t.innerHTML=e,document.getElementsByTagName(\"head\")[0].appendChild(t)}importScript(e){const t=document.createElement(\"script\");return t.src=e,document.getElementsByTagName(\"head\")[0].appendChild(t),new Promise(e=>t.onload=()=>e())}injectStyle(e){const t=document.createElement(\"style\");t.innerHTML=e,document.getElementsByTagName(\"head\")[0].appendChild(t)}importStyle(e){const t=document.createElement(\"link\");t.rel=\"stylesheet\",t.href=e,document.getElementsByTagName(\"head\")[0].appendChild(t)}};window.Websandbox=h})();"
+module.exports = "(()=>{\"use strict\";const e=/([.[\\]:;'\"\\s])/,t=new Set([\"__proto__\",\"constructor\",\"prototype\"]);function s(t){const s=[];let o=0;for(let r=0;r<t.length;r++){const i=t[r];e.test(i)&&\"\\\\\"!==t[r-1]&&(s.push(t.substring(o,r)),o=r+1)}return s.push(t.substring(o,t.length)),s.filter(e=>!!e).map(e=>e.replace(/\\\\/g,\"\"))}function o(e){return e.some(e=>t.has(e))}function r(e,t){const r=s(t);return o(r)?null:r.reduce((e,t)=>e?e[t]:null,e)}const i=\"message\",n=\"response\",c=\"set-interface\",a=\"service-message\",l=!!window.MSInputMethodContext&&!!document.documentMode,h={allowedSenderOrigin:\"null\"},d=class{constructor(e,t,s={}){this.remote={},this.serviceMethods={},this.localApi={},this.callbacks={},this._resolveRemoteMethodsPromise=null,this.options=Object.assign(Object.assign({},h),s),this.incrementalID=Math.floor(1e5*Math.random()),this.postMessage=e,this.remoteMethodsWaitPromise=new Promise(e=>{this._resolveRemoteMethodsPromise=e}),t(e=>this.onMessageListener(e))}onMessageListener(e){const t=e.data,{allowedSenderOrigin:s}=this.options;s&&e.origin!==s&&!l||(t.type===n?this.popCallback(t.callId,t.success,t.result):t.type===i?this.callLocalApi(t.methodName,t.arguments).then(e=>this.responseOtherSide(t.callId,e)).catch(e=>this.responseOtherSide(t.callId,e,!1)):t.type===c?(this.setInterface(t.apiMethods),this.responseOtherSide(t.callId)):t.type===a&&this.callLocalServiceMethod(t.methodName,t.arguments).then(e=>this.responseOtherSide(t.callId,e)).catch(e=>this.responseOtherSide(t.callId,e,!1)))}postMessageToOtherSide(e){this.postMessage(e,\"*\")}setInterface(e){var t;this.remote={},e.forEach(e=>{const t=s(e);if(o(t))return;let r=this.remote;for(let e=0;e<t.length-1;e++){const s=t[e];r[s]&&\"object\"==typeof r[s]||(r[s]={}),r=r[s]}r[t[t.length-1]]=this.createMethodWrapper(e)}),null===(t=this._resolveRemoteMethodsPromise)||void 0===t||t.call(this)}getMethodsFromInterface(e){return Object.keys(e).reduce((t,s)=>(\"object\"==typeof e[s]?t.push(...this.getMethodsFromInterface(e[s]).map(e=>`${s}.${e}`)):t.push(s),t),[])}setLocalApi(e){return new Promise((t,s)=>{const o=this.registerCallback(t,s);this.postMessageToOtherSide({callId:o,apiMethods:this.getMethodsFromInterface(e),type:c})}).then(()=>this.localApi=e)}setServiceMethods(e){this.serviceMethods=e}callLocalApi(e,t){const s=r(this.localApi,e);if(!s)throw new Error(`Local method \"${e}\" is not registered`);return Promise.resolve(s.call(this,...t))}callLocalServiceMethod(e,t){const s=r(this.serviceMethods,e);if(!s)throw new Error(`Service method ${e} is not registered`);return Promise.resolve(s.call(this,...t))}createMethodWrapper(e){return(...t)=>this.callRemoteMethod(e,...t)}callRemoteMethod(e,...t){return new Promise((s,o)=>{const r=this.registerCallback(s,o);this.postMessageToOtherSide({callId:r,methodName:e,type:i,arguments:t})})}callRemoteServiceMethod(e,...t){return new Promise((s,o)=>{const r=this.registerCallback(s,o);this.postMessageToOtherSide({callId:r,methodName:e,type:a,arguments:t})})}responseOtherSide(e,t,s=!0){t instanceof Error&&(t=[...Object.keys(t),\"message\"].reduce((e,s)=>(e[s]=t[s],e),{}));const o=()=>this.postMessage({callId:e,type:n,success:s,result:t},\"*\");try{o()}catch(e){console.error(\"Failed to post response, recovering...\",e),e instanceof DOMException&&(t=JSON.parse(JSON.stringify(t)),o())}}registerCallback(e,t){const s=(++this.incrementalID).toString();return this.callbacks[s]={successCallback:e,failureCallback:t},s}popCallback(e,t,s){const o=this.callbacks[e];o&&(t?o.successCallback(s):o.failureCallback(s),delete this.callbacks[e])}},p=window.Websandbox||new class{constructor(){this.connection=new d(window.parent.postMessage.bind(window.parent),e=>{window.addEventListener(\"message\",t=>{if(t.source===window.parent)return e(t)})},{allowedSenderOrigin:void 0}),this.connection.setServiceMethods({runCode:e=>this.runCode(e),importScript:e=>this.importScript(e),injectStyle:e=>this.injectStyle(e),importStyle:e=>this.importStyle(e)}),this.connection.callRemoteServiceMethod(\"iframeInitialized\")}runCode(e){const t=document.createElement(\"script\");t.innerHTML=e,document.getElementsByTagName(\"head\")[0].appendChild(t)}importScript(e){const t=document.createElement(\"script\");return t.src=e,document.getElementsByTagName(\"head\")[0].appendChild(t),new Promise(e=>t.onload=()=>e())}injectStyle(e){const t=document.createElement(\"style\");t.innerHTML=e,document.getElementsByTagName(\"head\")[0].appendChild(t)}importStyle(e){const t=document.createElement(\"link\");t.rel=\"stylesheet\",t.href=e,document.getElementsByTagName(\"head\")[0].appendChild(t)}};window.Websandbox=p})();"
 
 /***/ }
 
