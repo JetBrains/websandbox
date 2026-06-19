@@ -14,7 +14,8 @@ class Frame {
           return listener(event);
         };
         window.addEventListener('message', sourceCheckListener);
-      }
+      },
+      {allowedSenderOrigin: undefined}
     );
 
     this.connection.setServiceMethods({

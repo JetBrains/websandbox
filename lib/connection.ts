@@ -1,4 +1,4 @@
-import { propertyByPath, splitPath } from "./object-path";
+import { propertyByPath, splitPath, hasUnsafeSegments } from "./object-path";
 import type {API} from "./types";
 
 export const TYPE_MESSAGE = 'message';
@@ -10,9 +10,7 @@ export const TYPE_SERVICE_MESSAGE = 'service-message';
 const isIE11 = !!window.MSInputMethodContext && !!document.documentMode;
 
 const defaultOptions = {
-  //Will not affect IE11 because there sandboxed iframe has not 'null' origin
-  //but base URL of iframe's src
-  allowedSenderOrigin: undefined
+  allowedSenderOrigin: 'null'
 };
 
 export interface ConnectionOptions {
@@ -91,8 +89,10 @@ class Connection {
 
     remoteMethods.forEach(
       (key: string) => {
-        // If key is nested, we need to create nested structure
         const parts = splitPath(key);
+        if (hasUnsafeSegments(parts)) {
+          return;
+        }
         let current = this.remote;
         for (let i = 0; i < parts.length - 1; i++)
         {
