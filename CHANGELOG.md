@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.1](https://github.com/JetBrains/websandbox/compare/v1.2.1...v1.3.1) (2026-06-22)
+
 ### [1.2.1](https://github.com/JetBrains/websandbox/compare/v1.1.3...v1.2.1) (2026-05-11)
 
 ### [1.1.3](https://github.com/JetBrains/websandbox/compare/v1.1.2...v1.1.3) (2026-02-20)
