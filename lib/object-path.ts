@@ -1,6 +1,7 @@
 type AnyObject = any;
 
 const PATH_REG = /([.[\]:;'"\s])/;
+const UNSAFE_SEGMENTS = new Set(['__proto__', 'constructor', 'prototype']);
 
 export function escapePathPart(pathPart: string): string {
   if (!PATH_REG.test(pathPart)) {
@@ -31,17 +32,19 @@ export function splitPath(path: string): string[] {
   return result.filter(pathPart => !!pathPart).map(pathPart => pathPart.replace(/\\/g, ''));
 }
 
-/**
- * Extracts object property value by given path. Supports nested and array values: 'foo[0].bar'
- * @param {Object} object source object
- * @param {string} path path to value
- * @return {any | null} value by given path
- * */
+export function hasUnsafeSegments(parts: string[]): boolean {
+  return parts.some(part => UNSAFE_SEGMENTS.has(part));
+}
+
 export function propertyByPath<R extends AnyObject, O extends AnyObject = AnyObject>(
   object: O,
   path: string,
 ): R | null {
-  return splitPath(path).reduce<R | null>(
+  const parts = splitPath(path);
+  if (hasUnsafeSegments(parts)) {
+    return null;
+  }
+  return parts.reduce<R | null>(
     (acc, pathPart) => {
       if (acc) {
         return (acc as {[k: string]: R})[pathPart];

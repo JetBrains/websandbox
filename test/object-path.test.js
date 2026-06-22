@@ -81,5 +81,28 @@ describe('object extensions', () => {
 
     it('should split square bracketed path with space', () =>
       (splitPath('foo["with\\ dots"].test')).should.deep.equal(['foo', 'with dots', 'test']));
+
+  });
+
+  describe('prototype pollution protection', () => {
+    it('should not resolve __proto__ path in propertyByPath', () => {
+      const obj = {safe: {value: 42}};
+      (propertyByPath(obj, '__proto__') === null).should.be.true;
+    });
+
+    it('should not resolve constructor path in propertyByPath', () => {
+      const obj = {safe: {value: 42}};
+      (propertyByPath(obj, 'constructor') === null).should.be.true;
+    });
+
+    it('should not resolve nested __proto__ path', () => {
+      const obj = {foo: {bar: 1}};
+      (propertyByPath(obj, 'foo.__proto__.bar') === null).should.be.true;
+    });
+
+    it('should not resolve constructor.prototype path', () => {
+      const obj = {foo: 1};
+      (propertyByPath(obj, 'constructor.prototype') === null).should.be.true;
+    });
   });
 });

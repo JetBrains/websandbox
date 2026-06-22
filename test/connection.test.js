@@ -33,6 +33,7 @@ describe('Connection', function () {
 
         //Emulate response
         callMessageListener({
+            origin: 'null',
             data: {
                 callId: this.postMessage.getCall(0).args[0].callId,
                 type: TYPE_RESPONSE,
@@ -57,7 +58,7 @@ describe('Connection', function () {
 
     it('should accept nested methods in setInterface', function () {
         const conn = new Connection(this.postMessage, this.registerOnMessageListener);
-        
+
         conn.setInterface(['flat', 'nested.method']);
         conn.remote.flat.should.be.a('function');
         conn.remote.nested.method.should.be.a('function');
@@ -80,6 +81,7 @@ describe('Connection', function () {
 
         //Emulate response
         callMessageListener({
+            origin: 'null',
             data: {
                 callId: this.postMessage.getCall(0).args[0].callId,
                 type: TYPE_RESPONSE,
@@ -104,6 +106,7 @@ describe('Connection', function () {
         await conn.setLocalApi(this.localApi);
 
         callMessageListener({
+            origin: 'null',
             data: {
                 callId: CALL_ID,
                 type: TYPE_MESSAGE,
@@ -122,8 +125,9 @@ describe('Connection', function () {
         this.localApi.testLocalMethod.returns({fake: TYPE_RESPONSE});
 
         await conn.setLocalApi(this.localApi);
-        
+
         callMessageListener({
+            origin: 'null',
             data: {
                 callId: CALL_ID,
                 type: TYPE_MESSAGE,
@@ -134,7 +138,7 @@ describe('Connection', function () {
 
         // Wait for the asynchronous message handling
         await new Promise(resolve => setTimeout(resolve, 10));
-        
+
         this.postMessage.should.have.been.calledWith({
             callId: "fake-call-id",
             result: {fake: TYPE_RESPONSE},
@@ -151,8 +155,9 @@ describe('Connection', function () {
         this.localApi.nested.method.returns({fake: TYPE_RESPONSE});
 
         await conn.setLocalApi(this.localApi);
-        
+
         callMessageListener({
+            origin: 'null',
             data: {
                 callId: CALL_ID,
                 type: TYPE_MESSAGE,
@@ -163,7 +168,7 @@ describe('Connection', function () {
 
         // Wait for the asynchronous message handling
         await new Promise(resolve => setTimeout(resolve, 10));
-        
+
         this.postMessage.should.have.been.calledWith({
             callId: "fake-call-id",
             result: {fake: TYPE_RESPONSE},
@@ -172,15 +177,37 @@ describe('Connection', function () {
         }, '*');
     });
 
+    it('should reject messages from non-null origins by default', function () {
+        const conn = new Connection(this.postMessage, this.registerOnMessageListener);
+        conn.setInterface(['testMethod']);
+
+        callMessageListener({
+            origin: 'https://evil.example.com',
+            data: {
+                callId: 'evil',
+                type: 'set-interface',
+                apiMethods: ['polluted']
+            }
+        });
+
+        conn.remote.should.not.have.property('polluted');
+    });
+
+    it('should not register __proto__ methods via setInterface', function () {
+        const conn = new Connection(this.postMessage, this.registerOnMessageListener);
+        conn.setInterface(['__proto__.polluted']);
+        ({}).should.not.have.property('polluted');
+    });
+
     it('should resolve remote methods wait promise', async function () {
         const resolved = sinon.spy();
         const conn = new Connection(this.postMessage, this.registerOnMessageListener);
-        
+
         Promise.resolve(conn.remoteMethodsWaitPromise).then(resolved);
 
         await new Promise(resolve => setTimeout(resolve));
         resolved.should.not.have.been.called;
-        
+
         conn.setInterface(['testMethod']);
         await new Promise(resolve => setTimeout(resolve));
         resolved.should.have.been.called;
