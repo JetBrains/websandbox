@@ -30,6 +30,8 @@ export interface SandboxOptions {
   sandboxAdditionalAttributes?: string,
   // Additional attributes to add into sandboxed iFrame
   allowAdditionalAttributes?: string
+  // Policy used to trust the fully assembled srcdoc document.
+  trustedTypesPolicy?: {createHTML: (html: string) => unknown}
 }
 
 export const BaseOptions: SandboxOptions = {
@@ -155,7 +157,9 @@ class Websandbox {
       return frame;
     }
 
-    frame.setAttribute('srcdoc', this._prepareFrameContent(this.options));
+    const frameContent = this._prepareFrameContent(this.options);
+    const trustedFrameContent = this.options.trustedTypesPolicy?.createHTML(frameContent) ?? frameContent;
+    frame.setAttribute('srcdoc', trustedFrameContent as string);
     container.appendChild(frame);
     return frame;
   }
