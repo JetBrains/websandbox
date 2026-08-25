@@ -18,9 +18,26 @@ describe('Sandbox', function () {
         document.querySelector('iframe').should.not.be.undefined;
     });
 
-    it('should create iframe with correct srcdoc', function () {
+    it('should use the assembled srcdoc without a Trusted Types policy by default', function () {
         Sandbox.create({});
         document.querySelector('iframe').srcdoc.should.contain(`set-interface`);
+    });
+
+    it('should use the configured Trusted Types policy for the assembled srcdoc', function () {
+        const trustedFrameContent = '<html><head></head><body>trusted frame</body></html>';
+        const trustedTypesPolicy = {
+            createHTML: sinon.stub().returns(trustedFrameContent)
+        };
+
+        Sandbox.create({}, {
+            frameContent: '<html><head></head><body>custom frame</body></html>',
+            trustedTypesPolicy
+        });
+
+        trustedTypesPolicy.createHTML.should.have.been.calledOnce;
+        trustedTypesPolicy.createHTML.firstCall.args[0].should.contain('set-interface');
+        trustedTypesPolicy.createHTML.firstCall.args[0].should.contain('custom frame');
+        document.querySelector('iframe').srcdoc.should.equal(trustedFrameContent);
     });
 
     it('should support passing custom frameContent', function () {
