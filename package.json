@@ -59,8 +59,5 @@
     "webpack": "5.105.2",
     "webpack-cli": "^6.0.1",
     "webpack-dev-server": "5.2.3"
-  },
-  "dependencies": {
-    "@types/trusted-types": "2.0.7"
   }
 }
