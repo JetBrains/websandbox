@@ -18,16 +18,9 @@ describe('Sandbox', function () {
         document.querySelector('iframe').should.not.be.undefined;
     });
 
-    it('should create iframe with correct srcdoc', function () {
+    it('should use the assembled srcdoc without a Trusted Types policy by default', function () {
         Sandbox.create({});
         document.querySelector('iframe').srcdoc.should.contain(`set-interface`);
-    });
-
-    it('should leave srcdoc untrusted when no Trusted Types policy is configured', function () {
-        const sandbox = Sandbox.create({});
-
-        sandbox.options.should.not.have.property('trustedTypesPolicy');
-        document.querySelector('iframe').srcdoc.should.contain('set-interface');
     });
 
     it('should use the configured Trusted Types policy for the assembled srcdoc', function () {

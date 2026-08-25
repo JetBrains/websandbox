@@ -1,3 +1,5 @@
+import type {TrustedHTML} from 'trusted-types/lib';
+
 import Connection from './connection';
 // @ts-expect-error loader-based input
 import CompiledFrameScript from 'val-loader!./frame-bundle.js';
@@ -29,9 +31,9 @@ export interface SandboxOptions {
   // Additional attributes to add into sandboxed iFrame
   sandboxAdditionalAttributes?: string,
   // Additional attributes to add into sandboxed iFrame
-  allowAdditionalAttributes?: string
+  allowAdditionalAttributes?: string;
   // Policy used to trust the fully assembled srcdoc document.
-  trustedTypesPolicy?: {createHTML: (html: string) => unknown}
+  trustedTypesPolicy?: {createHTML: (html: string) => TrustedHTML};
 }
 
 export const BaseOptions: SandboxOptions = {
