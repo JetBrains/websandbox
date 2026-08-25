@@ -415,7 +415,7 @@ class Websandbox {
         return frameContent;
     }
     createIframe() {
-        var _a;
+        var _a, _b, _c;
         const containerSelector = this.options.frameContainer;
         const container = typeof containerSelector === 'string'
             ? document.querySelector(containerSelector)
@@ -435,7 +435,9 @@ class Websandbox {
             container.appendChild(frame);
             return frame;
         }
-        frame.setAttribute('srcdoc', this._prepareFrameContent(this.options));
+        const frameContent = this._prepareFrameContent(this.options);
+        const trustedFrameContent = (_c = (_b = this.options.trustedTypesPolicy) === null || _b === void 0 ? void 0 : _b.createHTML(frameContent)) !== null && _c !== void 0 ? _c : frameContent;
+        frame.setAttribute('srcdoc', trustedFrameContent);
         container.appendChild(frame);
         return frame;
     }
