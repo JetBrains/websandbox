@@ -126,6 +126,20 @@ describe('Sandbox', function () {
         sandbox2.connection.onMessageListener.should.have.been.called;
     });
 
+    it('should ignore messages with null source after its iframe is removed', function () {
+        const sandbox = Sandbox.create({});
+        sandbox.iframe.remove();
+        sinon.spy(sandbox.connection, 'onMessageListener');
+
+        window.dispatchEvent(new MessageEvent('message', {
+            origin: 'null',
+            source: null,
+            data: {type: 'message', methodName: 'methodToCall', arguments: [], callId: '1'}
+        }));
+
+        sandbox.connection.onMessageListener.should.not.have.been.called;
+    });
+
     it('should run function inside sandbox', async function () {
         const localApi = {
             methodToCall: sinon.spy()

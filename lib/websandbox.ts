@@ -78,7 +78,8 @@ class Websandbox {
         this.iframe.contentWindow!.postMessage.bind(this.iframe.contentWindow),
         listener => {
           const sourceCheckListener = (event: MessageEvent) => {
-            if (event.source !== this.iframe.contentWindow) {
+            // A removed iframe has a null contentWindow, and its late messages arrive with a null source
+            if (!event.source || event.source !== this.iframe.contentWindow) {
               return;
             }
             return listener(event);
