@@ -369,7 +369,8 @@ class Websandbox {
         this.promise = new Promise(resolve => {
             this.connection = new _connection__WEBPACK_IMPORTED_MODULE_0__["default"](this.iframe.contentWindow.postMessage.bind(this.iframe.contentWindow), listener => {
                 const sourceCheckListener = (event) => {
-                    if (event.source !== this.iframe.contentWindow) {
+                    // A removed iframe has a null contentWindow, and its late messages arrive with a null source
+                    if (!event.source || event.source !== this.iframe.contentWindow) {
                         return;
                     }
                     return listener(event);
