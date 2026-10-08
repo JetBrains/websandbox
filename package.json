@@ -3,8 +3,9 @@
   "version": "1.4.2",
   "description": "A sandbox library for runnung javascript inside HTML5 sandboxed iframe",
   "main": "dist/websandbox.js",
+  "module": "dist/websandbox.mjs",
   "scripts": {
-    "build": "rm -rf dist && webpack --bail --mode production --devtool source-map && npm run generate-declarations",
+    "build": "rm -rf dist && webpack --bail --mode production --devtool source-map && webpack --bail --mode production --devtool source-map --config webpack.esm.config.js && npm run generate-declarations",
     "generate-declarations": "tsc --declaration --emitDeclarationOnly --declarationDir dist",
     "lint": "eslint lib test",
     "test": "karma start",
